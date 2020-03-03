@@ -1,0 +1,11 @@
+@import '../../helpers/helpers.scss';
+
+$sidedrawer-bgColor--default: #244BD7 !default;
+
+.sidedrawer {
+  display: flex;
+  flex-direction: column;
+  background-color: $sidedrawer-bgColor--default;
+  max-width: 215px;
+  padding: 15px;
+}

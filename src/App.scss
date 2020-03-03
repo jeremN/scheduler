@@ -1,0 +1,18 @@
+@import 'components/helpers/helpers.scss';
+
+@import 'components/commons/reset';
+@import 'components/commons/base';
+
+html, 
+body, 
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.App {
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 210px 1fr;
+  height: 100%;
+}
