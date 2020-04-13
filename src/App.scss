@@ -3,6 +3,8 @@
 @import 'components/commons/reset';
 @import 'components/commons/base';
 
+$app-bgColor--default: hsl(218°, 44%, 96%);
+
 html, 
 body, 
 #root {
@@ -13,6 +15,7 @@ body,
 .App {
   display: grid;
   grid-template-rows: 100%;
-  grid-template-columns: 210px 1fr;
-  height: 100%;
+  grid-template-columns: 24rem 1fr;
+  min-height: 100%;
+  background-color: $app-bgColor--default;
 }

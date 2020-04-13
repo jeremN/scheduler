@@ -31,28 +31,46 @@
   cursor: pointer;
 }
 
+%formField {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: $greyDark;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+}
+
 %isH1 {
   @include font-size(h1);
-  font-weight: $fontWeight-medium;
 }
 
 %isH2 {
   @include font-size(h2);
-  font-weight: $fontWeight-medium;
 }
+
 %isH3 {
   @include font-size(h3);
-  font-weight: $fontWeight-medium;
 }
 %isH4 {
   @include font-size(h4);
-  font-weight: $fontWeight-medium;
 }
+
 %isH5 {
   @include font-size(h5);
-  font-weight: $fontWeight-medium;
 }
+
 %isH6 {
   @include font-size(h6);
-  font-weight: $fontWeight-medium;
+}
+
+%s14w600 {
+  font-weight: 600;
+  font-size: 1.8rem;
+  line-height: $lineHeightBase;
+}
+
+%s18w600 {
+  font-weight: 600;
+  font-size: 1.8rem;
+  line-height: $lineHeightBase;
 }

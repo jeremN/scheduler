@@ -1,3 +1,8 @@
+@import '../../helpers/helpers.scss';
+
+$avatar-defaultSize: 50px;
+$avatar-smallSize: 32px;
+
 .avatar {
   border-radius: 50%;
   display: flex;
@@ -5,10 +10,11 @@
   justify-content: center;
   color: $white;
   font-family: $fontFamilyBase;
-  font-size: 1.4rem;
+  font-size: 2.2rem;
   font-weight: bold;
-  line-height: 1.35;
+  line-height: 1.5;
   letter-spacing: 0.05rem;
+  text-transform: uppercase;
 
   &--default {
     width: 4rem;

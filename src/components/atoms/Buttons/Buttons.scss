@@ -1,0 +1,45 @@
+@import '../../helpers/helpers.scss';
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: bold;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: $white;
+  border: 1px solid hsl(230°, 25%, 95%);
+  color: $greyDark;
+  transition: all 200ms;
+
+  &:hover {
+    color: $deepBlueDark;
+    border-color: $greyDark;
+  }
+
+  &--primary {
+    background-color: $blueDarker;
+    color: $white;
+    border-color: $blue;
+
+    &:hover {
+      background-color: mix($blueDarker, $white, 80%);
+      color: $white;
+      border-color: $blueDarker;
+    }
+  }
+
+  &--rounded {
+    border-radius: 25px;
+  }
+
+  &--centered {
+    justify-content: center;
+  }
+
+  &--withIcon {
+    
+  }
+}

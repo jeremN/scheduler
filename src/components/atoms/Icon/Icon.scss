@@ -1,0 +1,20 @@
+@import '../../helpers/helpers.scss';
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+
+  &--rounded {
+    border-radius: 50%;
+  }
+
+  &--large {
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+  }
+}

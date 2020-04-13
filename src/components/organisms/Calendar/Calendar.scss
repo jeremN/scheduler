@@ -1,0 +1,66 @@
+@import '../../helpers/helpers.scss';
+
+$calendarHoursTitle-color: hsl(231°, 5%, 70%);
+$calendarDatesTitle-color: $black;
+$calendarBorder-color: hsl(231°, 5%, 70%);
+
+.calendar {
+  display: flex;
+  width: 100%;
+  position: relative;
+
+  &__date {
+    border-bottom: 2px solid $greyLighter;
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.6rem;
+    text-align: center;
+    text-transform: capitalize;
+    color: $deepBlueDark;
+    height: 50px;
+    padding: 16px;
+  
+    b {
+      font-weight: bold;
+      font-size: 1.8rem;
+    }
+  }
+
+  &__hoursBlock {
+    width: 80px;
+    padding-left: 30px;
+    padding-top: 41px;
+  }
+
+  &__datesBlock {
+    width: calc(100% - 80px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  &__dateBlock {
+    width: calc(100% / 7);
+  }
+
+  &__dropzone {
+    border-left: 1px solid $greyLighter;
+  }
+
+  &__hour {
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-transform: lowercase;
+    color: $greyDark;
+    text-align: center;
+    text-transform: lowercase;
+    height: 32px;
+    position: relative;
+  }
+
+  &__hourBlock {
+    height: 32px;
+    border-bottom: 1px solid $greyLighter;
+  }
+}

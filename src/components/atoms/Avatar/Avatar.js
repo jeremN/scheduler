@@ -1,10 +1,14 @@
 import React from 'react';
 
-const Avatar = (props) => {
+import './Avatar.scss';
+
+const Avatar = ({ letter, modifiers = ['avatar--default'] }) => {
+  const avatarModifiers = Array.isArray(modifiers) && modifiers.length ? modifiers.join(' ') : modifiers; 
+
   return (
-    <div className="avatar avatar--default">
-    
-    </div>    
+    <span className={ `avatar ${avatarModifiers}` }>
+      { letter }
+    </span>    
   );
 }
 

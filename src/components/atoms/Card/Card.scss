@@ -1,0 +1,17 @@
+@import '../../helpers/helpers.scss';
+
+$cardBackgroundColor--default: $white;
+$cardBackgroundColor--primary: hsl(214°, 32%, 20%);
+$cardBorderColor--default: hsl(240°, 100%, 99%);
+
+.card {
+  border-radius: 6px;
+  border: 1px solid $cardBorderColor--default;
+  background-color: $cardBackgroundColor--default;
+  padding: 15px;
+
+  &--primary {
+    background-color: $cardBackgroundColor--primary;
+    color: $white;
+  }
+}

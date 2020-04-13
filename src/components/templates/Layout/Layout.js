@@ -8,11 +8,11 @@ const Layout = props => {
     <Fragment>
       <Sidedrawer />
       <main>
-        <Header />
-        <div></div>
+        <Header pageTitle={ "Dashboard" } />
+        { props.children }
       </main>
     </Fragment>
-  )
+  );
 }
 
 export default Layout;

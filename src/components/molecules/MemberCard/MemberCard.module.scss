@@ -1,0 +1,84 @@
+@import '../../helpers/helpers.scss';
+
+$memberCard-backgroundColor: hsl(240°, 100%, 99%);
+$memberCard-borderColor: hsla(0°, 0%, 77%, 0.2);
+$memberCard-pictureDefaultBackgroundColor: hsl(0°, 0%, 77%);
+$memberCard-jobTitleColor: hsl(231°, 5%, 70%);
+$memberCard-nameColor: $black;
+
+.memberCard {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: $memberCard-backgroundColor;
+  border-radius: 8px;
+  border: 1px solid $memberCard-borderColor;
+  min-width: 354px;
+  width: 354px;
+  height: 80px;
+  padding: 15px;
+
+  &__picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: $memberCard-pictureDefaultBackgroundColor;
+    margin: 0 16px;
+  }
+
+  &__content,
+  &__hours {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    > * {
+      margin: 0;
+    }
+  }
+  
+  h3, 
+  p {
+    font-family: Poppins;
+    font-weight: 600;
+    line-height: 1.5;
+    text-transform: capitalize;
+  }
+
+  h3 {
+    font-size: 1.6rem;
+    color: $memberCard-nameColor;
+  }
+
+  p {
+    font-size: 1.4rem;
+    color: $memberCard-jobTitleColor;
+  }
+
+  &__content {
+    padding-left: 10px;
+  }
+
+  &__hours {
+    font-family: Poppins;
+    font-size: 1.8rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-left: 10px;
+    text-transform: capitalize; 
+    margin-left: auto;
+
+    span {
+      width: 50px;
+
+      &:first-child {
+        border-bottom: 1px solid $black;
+      }
+      &:last-child {
+        font-weight: 600;
+      }
+    }
+  }
+}

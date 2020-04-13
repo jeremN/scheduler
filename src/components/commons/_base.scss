@@ -24,16 +24,6 @@ body {
   font-size: $fontSizeBase;
 }
 
-a {
-  color: $linkBaseColor;
-
-  &:hover,
-  &:focus,
-  &:active {
-    color: $linkBaseActiveColor;
-  }
-}
-
 /* Headings */
 h1,
 .isLike__h1 { @extend %isH1; }
@@ -47,6 +37,20 @@ h5,
 .isLike__h5 { @extend %isH5; }
 h6,
 .isLike__h6 { @extend %isH6; }
+
+h1, 
+h2, 
+h3, 
+h4, 
+h5, h6,
+.isLike__h1,
+.isLike__h2,
+.isLike__h3,
+.isLike__h4,
+.isLike__h5,
+.isLike__h6 {
+  font-family: 'Montserrat', sans-serif;
+}
 
 /* Max values */
 img,

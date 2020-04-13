@@ -1,0 +1,33 @@
+@import '../../helpers/helpers.scss';
+
+.teamMembers {
+  width: 100%;
+  overflow-x: hidden; 
+  margin-top: 33px;
+  margin-bottom: 33px;
+
+  h2 {
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-transform: uppercase; 
+    color: hsl(231°, 5%, 70%);
+    padding-left: 15px;
+    margin: 0;
+  }
+
+  &__slider {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px;
+    overflow-x: scroll;
+
+    > * {
+      &:not(:first-child) {
+        margin-left: 20px;
+      }
+    }
+  }
+}

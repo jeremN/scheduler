@@ -1,0 +1,19 @@
+@import '../../helpers/helpers.scss';
+
+.form__group {
+  display: flex;
+  margin-bottom: 25px;
+
+  &--column {
+    flex-direction: column;
+  }
+
+  label {
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+
+    small {
+      font-size: 1rem;
+    }
+  }
+}
