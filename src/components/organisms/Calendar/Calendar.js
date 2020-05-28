@@ -3,6 +3,8 @@ import React from 'react';
 import './Calendar.scss';
 
 const Calendar = props => {
+
+
   return (
     <div className="calendar">
       <div className="calendar__hoursBlock">

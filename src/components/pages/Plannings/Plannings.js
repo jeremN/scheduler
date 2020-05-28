@@ -5,6 +5,9 @@ import React, {
   useMemo
 } from 'react';
 import { Redirect, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setNewPlanning } from '../../../store/actions';
 
 import DatePicker from 'react-datepicker';
 
@@ -18,37 +21,6 @@ import './Plannings.scss';
 
 
 // Temporary
-const planningList = [
-  {
-    id: 1,
-    title: 'Planning 1',
-    shop: 'aubergenville',
-    startDate: '13/04/2020',
-    endDate: '19/04/2020',
-    startHour: '8h30',
-    endHour: '20h30',
-    status: 'plublished'
-  }, {
-    id: 2,
-    title: 'Planning 1',
-    shop: 'aubergenville',
-    startDate: '13/04/2020',
-    endDate: '19/04/2020',
-    startHour: '8h30',
-    endHour: '20h30',
-    status: 'wip'
-  }, {
-    id: 3,
-    title: 'Planning 2',
-    shop: 'aubergenville',
-    startDate: '20/04/2020',
-    endDate: '27/04/2020',
-    startHour: '8h30',
-    endHour: '20h30',
-    status: 'wip'
-  }
-]
-
 const addDays = (date, days) => {
   let result = new Date(date);
   result.setDate(result.getDate() + days);
@@ -63,14 +35,16 @@ const getTimeOnly = (date) => {
 const Plannings = props => {
   const currentDate = new Date();
   const currentDatePlusSeven = addDays(currentDate, 6);
-
-  const initialState = {
+  const planningList = useSelector(({ plannings }) => plannings.planningList);
+  const dispatch = useDispatch();
+  
+  const formState = {
     title: '',
     shop: 'none',
     startDate: currentDate,
     endDate: currentDatePlusSeven,
-    startHour: '',
-    endHour: ''
+    startHours: '',
+    endHours: ''
   }
 
   const formReducer = (state, { field, value }) => {
@@ -80,12 +54,12 @@ const Plannings = props => {
     }
   }
 
-  const [id, setId] = useState('');
+  // const planningId = useSelector(({ plannings }) => plannings.loadedPlanning.id);
   const [toEdit, setToEdit] = useState(false);
-  const [state, dispatch] = useReducer(formReducer, initialState);
+  const [state, setState] = useReducer(formReducer, formState);
 
   const handleChange = (e, field = null, val = null) => {
-    dispatch({
+    setState({
       field: field ? field : e.target.name,
       value: val ? val : e.target.value
     })
@@ -96,26 +70,26 @@ const Plannings = props => {
     // 1 - Form validation
     const dataToSend = {
       ...state,
-      startHour: getTimeOnly(state.startHour),
-      endHour: getTimeOnly(state.endHour),
+      startHours: getTimeOnly(state.startHours),
+      endHours: getTimeOnly(state.endHours),
     }
     console.log(dataToSend)
+    dispatch(setNewPlanning(dataToSend))
     // 2 - Send form to API
      // -> response has the new form
      // -> append response to Store
-     setId(3);
      // -> when done, redirect
     // 3 - Redirect to /plannings/edit/:id
-    setToEdit(true);
-
+    // setToEdit(true);
   }
+
   const {
     title,
     shop,
     startDate,
     endDate,
-    startHour,
-    endHour,
+    startHours,
+    endHours,
   } = state;
 
   const plannings = useMemo(() => {
@@ -126,7 +100,7 @@ const Plannings = props => {
             <span className="plannings__itemTitle">{ planning.title }</span>
             <span className="plannings__itemShop">{ planning.shop }</span>
             <span className="plannings__itemDates">{ planning.startDate } <br /> { planning.endDate }</span>
-            <span className="plannings__itemHours">{ planning.startHour } - { planning.endHour }</span>
+            <span className="plannings__itemHours">{ planning.startHours } - { planning.endHours }</span>
             <span className="plannings__itemStatus">{ planning.status }</span>
             <span className="plannings__itemActions">
               <Link to={`/plannings/edit/${planning.id}`}>Editer</Link>
@@ -134,14 +108,14 @@ const Plannings = props => {
               <Button>Dupliquer</Button>
             </span>
           </li>
-        ))}
+        )) }
       </ul>
     );
   }, [planningList]);
 
   return (
     <Fragment>
-      { toEdit && id ? <Redirect to={ `/plannings/edit/${id}` } /> : null }
+      {/* toEdit && planningId ? <Redirect to={ `/plannings/edit/${planningId}` } /> : null */}
       <div className="plannings">
         <Card modifiers={ ['primary'] } classes={ ['card__item--1'] }>
           <h3>Créer un planning</h3>
@@ -215,10 +189,10 @@ const Plannings = props => {
                   id="planningStartHour"
                   className="form__field" 
                   name="startHour" 
-                  selected={ startHour }
+                  selected={ startHours }
                   showTimeSelect
                   showTimeSelectOnly
-                  onChange={ date => handleChange(null, 'startHour', date) }
+                  onChange={ date => handleChange(null, 'startHours', date) }
                   dateFormat="hh:mm" />
               </FormGroup>
               <FormGroup 
@@ -230,14 +204,14 @@ const Plannings = props => {
                   id="planningEndHour"
                   className="form__field" 
                   name="endHour" 
-                  selected={ endHour }
+                  selected={ endHours }
                   showTimeSelect
                   showTimeSelectOnly
-                  onChange={ date => handleChange(null, 'endHour', date) }
+                  onChange={ date => handleChange(null, 'endHours', date) }
                   dateFormat="hh:mm" />
               </FormGroup>
             </div> 
-            <Button modifiers={ ['primary'] } type="submit">
+            <Button modifiers={ ['primary'] } type="submit" >
               Créer mon planning
             </Button>
           </form>

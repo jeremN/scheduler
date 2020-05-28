@@ -1,3 +1,8 @@
 export {} from './auth';
 
-export {} from './plannings';
+export {
+  setNewPlanning,
+  setNewPlanningSuccess,
+  setNewPlanningFail,
+  setNewPlanningStart,
+} from './plannings';
