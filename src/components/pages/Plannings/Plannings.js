@@ -2,10 +2,11 @@ import React, {
   Fragment,
   useReducer,
   useState,
-  useMemo
+  useMemo,
+  useEffect
 } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 import { setNewPlanning } from '../../../store/actions';
 
@@ -19,8 +20,6 @@ import FormGroup from '../../molecules/FormGroup/FormGroup';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Plannings.scss';
 
-
-// Temporary
 const addDays = (date, days) => {
   let result = new Date(date);
   result.setDate(result.getDate() + days);
@@ -29,20 +28,24 @@ const addDays = (date, days) => {
 
 const getTimeOnly = (date) => {
   let time = new Date(date);
-  return time.toTimeString();
+  return moment(time).format('HH:mm:ss');
+}
+
+const dateFormatting = (date) => {
+  const currentDate = new Date(date);
+  return moment(currentDate).format('DD/MM/YYYY');
 }
 
 const Plannings = props => {
   const currentDate = new Date();
-  const currentDatePlusSeven = addDays(currentDate, 6);
-  const planningList = useSelector(({ plannings }) => plannings.planningList);
-  const dispatch = useDispatch();
-  
+  const currentDatePlusSevenDays = addDays(currentDate, 6);
+
+  // TODO => replace shop by team (when team page will be available)
   const formState = {
     title: '',
     shop: 'none',
     startDate: currentDate,
-    endDate: currentDatePlusSeven,
+    endDate: currentDatePlusSevenDays,
     startHours: '',
     endHours: ''
   }
@@ -54,8 +57,8 @@ const Plannings = props => {
     }
   }
 
-  // const planningId = useSelector(({ plannings }) => plannings.loadedPlanning.id);
-  const [toEdit, setToEdit] = useState(false);
+  const [planningsList, setplanningsList] = useState([]);
+  const [planningId, setPlanningId] = useState(null);
   const [state, setState] = useReducer(formReducer, formState);
 
   const handleChange = (e, field = null, val = null) => {
@@ -67,21 +70,54 @@ const Plannings = props => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault()
-    // 1 - Form validation
+    // TODO Form validation
+
     const dataToSend = {
       ...state,
       startHours: getTimeOnly(state.startHours),
       endHours: getTimeOnly(state.endHours),
+      startDate: dateFormatting(state.startDate),
+      endDate: dateFormatting(state.endDate),
+      status: 'wip'
     }
-    console.log(dataToSend)
-    dispatch(setNewPlanning(dataToSend))
-    // 2 - Send form to API
-     // -> response has the new form
-     // -> append response to Store
-     // -> when done, redirect
-    // 3 - Redirect to /plannings/edit/:id
-    // setToEdit(true);
+
+    const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/newPlanning`;
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ newPlanning: dataToSend })
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((result) => {
+        setPlanningId(result.planningID);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
+
+  useEffect(() => {
+    const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/planningsList`;
+    fetch(url,{
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(
+        (result) => {
+          setplanningsList(result.planningsList);
+        },
+        (error) => {
+          console.error('GET plannings list error', error);
+        }
+      )
+  }, []);
 
   const {
     title,
@@ -95,7 +131,15 @@ const Plannings = props => {
   const plannings = useMemo(() => {
     return (
       <ul className="plannings__list">
-        { planningList.map((planning, index) => (
+        <li className="plannings__item">
+          <span className="plannings__itemTitle">Titre</span>
+          <span className="plannings__itemShop">Equipe</span>
+          <span className="plannings__itemDates">Du <br /> Au</span>
+          <span className="plannings__itemHours">Heures</span>
+          <span className="plannings__itemStatus">Status</span>
+          <span className="plannings__itemActions"></span>
+        </li>
+        { planningsList.map((planning, index) => (
           <li key={ index } className="plannings__item">
             <span className="plannings__itemTitle">{ planning.title }</span>
             <span className="plannings__itemShop">{ planning.shop }</span>
@@ -111,11 +155,11 @@ const Plannings = props => {
         )) }
       </ul>
     );
-  }, [planningList]);
+  }, [planningsList]);
 
   return (
     <Fragment>
-      {/* toEdit && planningId ? <Redirect to={ `/plannings/edit/${planningId}` } /> : null */}
+      {planningId ? <Redirect to={ `/plannings/edit/${planningId}` } /> : null }
       <div className="plannings">
         <Card modifiers={ ['primary'] } classes={ ['card__item--1'] }>
           <h3>Créer un planning</h3>
@@ -218,7 +262,7 @@ const Plannings = props => {
         </Card>
         <Card classes={ ['card__item--2'] }>
           <h3>Mes derniers plannings</h3>
-          <p className="subtitle">Seuls les 7 derniers plannings sont affichés</p>
+          <p className="subtitle">Seuls les { planningsList.length } derniers plannings sont affichés</p>
           { plannings }
         </Card>
       </div>

@@ -14,7 +14,6 @@ import './index.css';
 import App from './App';
 
 import authReducer from './store/reducers/auth';
-import planningsReducer from './store/reducers/plannings';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -26,7 +25,6 @@ const enhancer = composeEnhancers(
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  plannings: planningsReducer
 });
 
 const store = createStore(rootReducer, enhancer);
