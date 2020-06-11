@@ -3,12 +3,10 @@ import React, {
   useReducer,
   useState,
   useMemo,
-  useEffect
+  useEffect,
 } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import moment from 'moment';
-
-import { setNewPlanning } from '../../../store/actions';
 
 import DatePicker from 'react-datepicker';
 
@@ -68,7 +66,7 @@ const Plannings = props => {
     })
   }
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault()
     // TODO Form validation
 
@@ -85,7 +83,7 @@ const Plannings = props => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({ newPlanning: dataToSend })
@@ -104,19 +102,22 @@ const Plannings = props => {
   }
 
   useEffect(() => {
-    const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/planningsList`;
-    fetch(url,{
-      method: 'GET'
-    })
-      .then(response => response.json())
-      .then(
-        (result) => {
-          setplanningsList(result.planningsList);
-        },
-        (error) => {
-          console.error('GET plannings list error', error);
-        }
-      )
+    async function fetchListOfPlannings () {    
+      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/planningsList`;
+      fetch(url,{
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(
+          (result) => {
+            setplanningsList(result.planningsList);
+          },
+          (error) => {
+            console.error('GET plannings list error', error);
+          }
+        )
+    };
+    fetchListOfPlannings();
   }, []);
 
   const {
@@ -129,6 +130,29 @@ const Plannings = props => {
   } = state;
 
   const plannings = useMemo(() => {
+    const handleDelete =  (evt, planningID) => {
+      evt.preventDefault();
+      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/deletePlanning/${planningID}`;
+
+      fetch(url, {
+        method: 'DELETE'
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((result) => {
+          // TODO display response message
+          const currentList = [...planningsList];
+          const updatedList = currentList.filter((element) => element._id !== planningID)
+          setplanningsList(updatedList);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+    }
+
     return (
       <ul className="plannings__list">
         <li className="plannings__item">
@@ -140,15 +164,15 @@ const Plannings = props => {
           <span className="plannings__itemActions"></span>
         </li>
         { planningsList.map((planning, index) => (
-          <li key={ index } className="plannings__item">
+          <li key={ planning._id } className="plannings__item">
             <span className="plannings__itemTitle">{ planning.title }</span>
             <span className="plannings__itemShop">{ planning.shop }</span>
             <span className="plannings__itemDates">{ planning.startDate } <br /> { planning.endDate }</span>
             <span className="plannings__itemHours">{ planning.startHours } - { planning.endHours }</span>
             <span className="plannings__itemStatus">{ planning.status }</span>
             <span className="plannings__itemActions">
-              <Link to={`/plannings/edit/${planning.id}`}>Editer</Link>
-              <Button>Supprimer</Button>
+              <Link to={`/plannings/edit/${planning._id}`}>Editer</Link>
+              <Button clicked={ (evt) => handleDelete(evt, planning._id) }>Supprimer</Button>
               <Button>Dupliquer</Button>
             </span>
           </li>

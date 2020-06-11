@@ -1,6 +1,8 @@
 import React, { 
   Fragment,
-  useEffect 
+  useEffect,
+  useReducer,
+  useMemo
 } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -14,7 +16,7 @@ const EditPlanning = props => {
   let { id } = useParams();
 
   // TODO => replace shop by team (when team page will be available)
-  const planningState = {
+  const initialState = {
     startHours: '',
     endHours: '',
     startDate: '',
@@ -22,35 +24,62 @@ const EditPlanning = props => {
     shop: '',
     title: ''
   }
-  const getHoursLength = (start, end) => {
-    
+
+  const planningReducer = (currentState, action) => {
+    switch (action.type) {
+      case 'updateTeam':
+        return {
+          ...currentState,
+          shop: action.shop
+        };
+      case 'updateContent':
+        return {
+          ...currentState,
+          content: action.content
+        };
+      case 'setPlanningState':
+        return {
+          ...currentState, 
+          ...action.newState
+        };
+      default:
+        return currentState;
+    }
   }
 
-  const getDaysLength = (start, end) => {
-
-  }
+  const [planningState, dispatchPlanning] = useReducer(planningReducer, initialState);
 
   useEffect(() => {
-    const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/planning/${id}`;
-    fetch(url,{
-      method: 'GET'
-    })
-      .then(response => response.json())
-      .then(
-        (result) => {
-          console.debug('edit page', result)
-          // setplanningsList(result.planningsList);
-        },
-        (error) => {
-          console.error('GET plannings list error', error);
-        }
-      )
+    async function fetchPlanning() {
+      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/planning/${id}`;
+      await fetch(url,{
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(
+          (result) => {
+            console.debug('edit page', result)
+            dispatchPlanning({
+              type: 'setPlanningState',
+              newState: result.planning
+            })
+          },
+          (error) => {
+            console.error('GET plannings list error', error);
+          }
+        )
+     }
+     fetchPlanning();
   }, []);
 
   return (
     <Fragment>
       <EditPlanningNav />
-      <Calendar>
+      <Calendar
+        startHours={ planningState.startHours }
+        endHours={ planningState.endHours }
+        startDate={ planningState.startDate }
+        endDate={ planningState.endDate } >
       </Calendar>
     </Fragment>
   );
