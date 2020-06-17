@@ -130,7 +130,7 @@ const Plannings = props => {
   } = state;
 
   const plannings = useMemo(() => {
-    const handleDelete =  (evt, planningID) => {
+    const handleDelete = (evt, planningID) => {
       evt.preventDefault();
       const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/deletePlanning/${planningID}`;
 
@@ -147,6 +147,41 @@ const Plannings = props => {
           const currentList = [...planningsList];
           const updatedList = currentList.filter((element) => element._id !== planningID)
           setplanningsList(updatedList);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+    }
+
+    const handleDuplicate = (evt, planningID) => {
+      evt.preventDefault();
+      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/duplicate`;
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+
+      const currentList = [...planningsList];
+      const duplicatedPlanning = currentList.find(element => element._id === planningID);
+
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ planningID: planningID })
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((result) => {
+          const newPlanning = { 
+            ...duplicatedPlanning,
+            _id: result.newID
+          };
+          const updatedList = [
+            ...currentList, 
+            newPlanning
+          ];
+          setplanningsList(updatedList);          
         })
         .catch((error) => {
           console.error(error);
@@ -173,7 +208,7 @@ const Plannings = props => {
             <span className="plannings__itemActions">
               <Link to={`/plannings/edit/${planning._id}`}>Editer</Link>
               <Button clicked={ (evt) => handleDelete(evt, planning._id) }>Supprimer</Button>
-              <Button>Dupliquer</Button>
+              <Button clicked={ (evt) => handleDuplicate(evt, planning._id) }>Dupliquer</Button>
             </span>
           </li>
         )) }
