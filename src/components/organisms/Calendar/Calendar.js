@@ -47,17 +47,36 @@ const Calendar = props => {
   const getHoursLength = () => {
     const start = moment(startHours, hoursFormat);
     const end = moment(endHours, hoursFormat);
-    const hoursLen = end.diff(start, 'minutes') / 60;
-    const minutePxValue = end.diff(start, 'minutes') / (dimensions.h - 50);
+    let hoursLen = end.diff(start, 'minutes') / 60;
+    const minutePxValue =  (dimensions.h - 50) / end.diff(start, 'minutes');
     const hours = [];
 
-    for (let index = 0; index < hoursLen; index++) {
-      hours.push(moment(start, hoursFormat).add(index, 'hours').format(hoursFormat));
+    let loopStart = moment(startHours, hoursFormat);
+    let loopEnd = moment(startHours, hoursFormat);
+    let roundedStart = moment(startHours, hoursFormat);
+    let roundedEnd = moment(startHours, hoursFormat);
+
+    if (start.minutes != '00') {
+      loopStart = 60 - start.minutes();
+      roundedStart = start.add(1, 'hour').startOf('hour');
     }
 
-    console.debug(hours, start, end, minutePxValue)
-    
-    return { hoursTotal: hoursLen, pxValue: minutePxValue, hours: hours };
+    if (end.minutes != '00') {
+      loopEnd = end.minutes();
+      roundedEnd = end.startOf('hour');
+    }
+    hours.push(loopStart)
+
+    console.debug(start, end)
+    for (let index = 0; index < hoursLen; index++) {
+      hours.push(moment(roundedStart, hoursFormat).add(index, 'hours').format(hoursFormat));
+    }
+
+    if (hours[hours.length - 1] !== loopEnd) {
+      hours.push(loopEnd)
+    }
+    console.debug(hours)
+    return { hoursTotal: hoursLen, pxValue: minutePxValue, hours: hours, hoursLimit: [start, end] };
   }
   
   const getWeekLength = () => {
@@ -73,15 +92,27 @@ const Calendar = props => {
   }
 
   const setHoursBlock = useMemo(() => {
-    const hoursObject = getHoursLength();
-
+    const { hours, pxValue, hoursLimit } = getHoursLength();
+    const hourStyle = {
+      height: pxValue * 60
+    };
+    
     return (
       <Fragment>
         <ul className="calendar__hoursList">
-          { hoursObject.hours.map((hour) => (
-            <li key={ moment(hour, hoursFormat).format(hoursFormat) } className="calendar__hour">{ moment(hour, hoursFormat).format('HH[h]mm') }</li>
-            ))
-          }
+          { hours.map((hour, index) => {
+
+            if (!Number.isNaN(hour)) {
+              hourStyle.height = pxValue * hour;
+            }
+            console.debug(!Number.isNaN(hour) ? moment(hoursLimit[index === 0 ? 0 : 1], hoursFormat).format(hoursFormat) : moment(hour, hoursFormat).format(hoursFormat))
+            return (
+              <li 
+                key={ !Number.isNaN(hour) ? moment(hoursLimit[index === 0 ? 0 : 1], hoursFormat).format(hoursFormat) : moment(hour, hoursFormat).format(hoursFormat) } 
+                className="calendar__hour" 
+                style={ hourStyle }>{ !Number.isNaN(hour) ? '' : moment(hour, hoursFormat).format('HH[h]mm') }</li>
+            );
+          }) }
         </ul>
       </Fragment>
     );
@@ -89,7 +120,10 @@ const Calendar = props => {
 
   const setWeekBlock = useMemo(() => {
     const weekArray = getWeekLength();
-    const hoursObject = getHoursLength();
+    const { hours, pxValue, hoursTotal } = getHoursLength();
+    const hourStyle = {
+      height: pxValue * 60
+    };
 
     return (
       <Fragment>
@@ -97,8 +131,8 @@ const Calendar = props => {
           <div key={ moment(day, dayFormat).format(dayFormat) } className="calendar__dateBlock">
             <p className="calendar__date">{ moment(day, dayFormat).format('dddd') } <b>{ moment(day, dayFormat).format('DD') }</b></p>
             <ul className="calendar__dropzone">
-            { hoursObject.hours.map((hour) => (
-              <li key={ moment(hour, hoursFormat).format(hoursFormat) } className="calendar__hourBlock"></li>
+            { hours.map((hour) => (
+              <li key={ moment(hour, hoursFormat).format(hoursFormat) } className="calendar__hourBlock" style={ hourStyle }></li>
               ))
             }
             </ul>
