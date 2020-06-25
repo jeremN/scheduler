@@ -49,14 +49,13 @@ $calendarBorder-color: hsl(231°, 5%, 70%);
     border-left: 1px solid $greyLighter;
   }
 
-  &__hour {
+  &__hoursList > * {
     font-weight: 600;
     font-size: 1.2rem;
     text-transform: lowercase;
     color: $greyDark;
     text-align: center;
     text-transform: lowercase;
-    height: 32px;
     position: relative;
   }
 

@@ -47,16 +47,46 @@ const Calendar = props => {
   const getHoursLength = () => {
     const start = moment(startHours, hoursFormat);
     const end = moment(endHours, hoursFormat);
-    const hoursLen = end.diff(start, 'minutes') / 60;
-    const minutePxValue = end.diff(start, 'minutes') / (dimensions.h - 50);
+    let hoursLen = end.diff(start, 'minutes') / 60;
+    const minutePxValue =  (dimensions.h - 50) / end.diff(start, 'minutes');
     const hours = [];
 
-    for (let index = 0; index < hoursLen; index++) {
-      hours.push(moment(start, hoursFormat).add(index, 'hours').format(hoursFormat));
+    let loopStart = moment(startHours, hoursFormat);
+    let loopEnd = moment(startHours, hoursFormat);
+    let roundedStart = moment(startHours, hoursFormat);
+
+    if (start.minutes != '00') {
+      loopStart = 60 - start.minutes();
+      roundedStart = moment(start, hoursFormat).add(1, 'hour').startOf('hour');
     }
 
-    console.debug(hours, start, end, minutePxValue)
-    
+    if (end.minutes != '00') {
+      loopEnd = end.minutes();
+    }
+
+    hours.push({
+      loopKey: moment(start, hoursFormat).format(hoursFormat),
+      content: '',
+      pxHeight: minutePxValue * loopStart
+    })
+
+    for (let index = 0; index < hoursLen; index++) {
+      const hour = moment(roundedStart, hoursFormat).add(index, 'hours').format(hoursFormat);
+      hours.push({ 
+        loopKey: hour,
+        content: moment(hour, hoursFormat).format('HH[h]mm'),
+        pxHeight: minutePxValue * 60
+      });
+    }
+
+    if (hours[hours.length - 1] !== loopEnd) {
+      hours.push({
+        loopKey: moment(end).format(hoursFormat),
+        content: '',
+        pxHeight: minutePxValue * loopEnd
+      })
+    }
+    console.debug('hours', hours)
     return { hoursTotal: hoursLen, pxValue: minutePxValue, hours: hours };
   }
   
@@ -73,23 +103,19 @@ const Calendar = props => {
   }
 
   const setHoursBlock = useMemo(() => {
-    const hoursObject = getHoursLength();
-
+    const { hours } = getHoursLength();
+    console.debug('A', hours.length)
     return (
-      <Fragment>
         <ul className="calendar__hoursList">
-          { hoursObject.hours.map((hour) => (
-            <li key={ moment(hour, hoursFormat).format(hoursFormat) } className="calendar__hour">{ moment(hour, hoursFormat).format('HH[h]mm') }</li>
-            ))
-          }
+        { hours.map(({ loopKey, pxHeight, content }) => <li key={ loopKey } style={ { height: `${pxHeight}px` } }>{ content }</li>) 
+        }
         </ul>
-      </Fragment>
     );
   }, [startHours, endHours]);
 
   const setWeekBlock = useMemo(() => {
     const weekArray = getWeekLength();
-    const hoursObject = getHoursLength();
+    const { hours } = getHoursLength();
 
     return (
       <Fragment>
@@ -97,8 +123,11 @@ const Calendar = props => {
           <div key={ moment(day, dayFormat).format(dayFormat) } className="calendar__dateBlock">
             <p className="calendar__date">{ moment(day, dayFormat).format('dddd') } <b>{ moment(day, dayFormat).format('DD') }</b></p>
             <ul className="calendar__dropzone">
-            { hoursObject.hours.map((hour) => (
-              <li key={ moment(hour, hoursFormat).format(hoursFormat) } className="calendar__hourBlock"></li>
+            { hours.map(({ loopKey, pxHeight }) => (
+              <li 
+                key={ loopKey } 
+                className="calendar__hourBlock" 
+                style={ { height: `${pxHeight}px` } }></li>
               ))
             }
             </ul>
