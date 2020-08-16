@@ -1,3 +1,4 @@
+import Landing from '../components/pages/Landing/Landing';
 import Home from '../components/pages/Home/Home';
 import Team from '../components/pages/Team/Team';
 import Plannings from '../components/pages/Plannings/Plannings';
@@ -9,6 +10,12 @@ import PasswordForgotten from '../components/pages/PasswordForgotten/PasswordFor
 import NotFound from '../components/pages/NotFound/NotFound';
 
 const routes = [
+  {
+    path: '/',
+    components: Landing,
+    display: 'always',
+    exact: true,
+  },
   {
     path: '/Home',
     components: Home,

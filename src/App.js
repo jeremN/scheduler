@@ -6,7 +6,7 @@ import Layout from './components/templates/Layout/Layout';
 import routes from './routes/routes';
 import './App.scss';
 
-function App(props) {
+function App (props) {
 
   const appRoutes = (
     <Switch>
