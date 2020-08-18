@@ -8,6 +8,8 @@ import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 
+import clientWrapper from '../../../utilities/fetchWrapper';
+
 import './Signup.scss';
 
 const Signup = props => {
@@ -36,35 +38,21 @@ const Signup = props => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    
-    const dataToSend = { ...state }
-    const url = `${process.env.REACT_APP_API_ENDPOINT}/auth/signup`;
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
 
-    await fetch(url, {
-      method: 'POST', 
-      headers: headers,
-      body: JSON.stringify(dataToSend)
-    })
-      .then((response) => {
-        if (response.status === 422) {
+    await clientWrapper('auth/signup', { body: { ...state } })
+      .then((result) => {
+        console.debug(result)
+        if (result.status && result.status === 422) {
           throw new Error('Validation failed');
         }
 
-        if (response.status !== 200 && response.status !== 201) {
-          throw new Error('User creation failed');
+        if (result.status && result.status !== 201) {
+          throw new Error('Could not authenticate you');
         }
 
-        return response.json();
-      })
-      .then((result) => {
         if (!!result.userID) {
           props.history.push('/signin');
         }
-      })
-      .catch((error) => {
-        console.error('signup error: ', error)
       })
   }
 

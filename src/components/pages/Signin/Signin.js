@@ -1,6 +1,7 @@
 import React, {
   Fragment,
-  useReducer
+  useReducer,
+  useContext
 } from 'react';
 
 import Card from '../../atoms/Card/Card';
@@ -8,9 +9,14 @@ import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 
+import { AuthContext } from '../../../App';
+import clientWrapper from '../../../utilities/fetchWrapper';
+
 import './Signin.scss';
 
 const Signin = props => {
+  const { dispatchState } = useContext(AuthContext);
+
   const signinState = {
     email: '',
     password: ''
@@ -34,40 +40,25 @@ const Signin = props => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    console.debug('signin')
     
-    const dataToSend = { ...state }
-    const url = `${process.env.REACT_APP_API_ENDPOINT}/auth/signin`;
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    await fetch(url, {
-      method: 'POST', 
-      headers: headers,
-      body: JSON.stringify(dataToSend)
-    })
-      .then((response) => {
-        if (response.status === 422) {
+    await clientWrapper('auth/signin', { body: { ...state } })
+      .then((result) => {
+        if (result.status === 422) {
           throw new Error('Validation failed');
         }
 
-        if (response.status !== 200 && response.status !== 201) {
+        if (result.status !== 200 && result.status !== 201) {
           throw new Error('Could not authenticate you');
         }
 
-        return response.json();
-      })
-      .then((result) => {
-        const remainingMs = 60 * 60 * 1000;
-        const expireDate = new Date(new Date().getTime() + remainingMs);
-        const userObj = {
-          token: result.token,
-          id: result.userID,
-          expiryDate: expireDate
-        }
-        sessionStorage.setItem('scheduler_user', JSON.stringify(userObj));
-      })
-      .catch((error) => {
-        console.error('signin error: ', error)
+        dispatchState({ 
+          type: 'LOGIN', 
+          payload: {
+          userID: result.userID,
+          token: result.token
+          }
+        });
       })
   }
 
@@ -79,7 +70,7 @@ const Signin = props => {
   return (
     <Fragment>
       <div className="signin">
-        <h2>Signup</h2>
+        <h2>Signin</h2>
         <Card modifiers={ ['primary'] } classes={ ['card__signin'] }>
           <form className="signup__form" onSubmit={ handleSubmit }>
             <FormGroup 

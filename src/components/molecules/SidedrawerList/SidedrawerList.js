@@ -54,6 +54,7 @@ const SidedrawerList = props => {
     <ul className={ `${styles.menu__list} list` }>
       { list.map(({ to, icon, wording, exact }) => (
         <NavigationItem
+          key={ `route_to_${to}` }
           linkTo={ `/${to}`}
           currentClasses={ `${styles.menu__link} list__link` }
           activeClass={ styles.menu__link__active }
