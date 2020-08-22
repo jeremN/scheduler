@@ -1,3 +1,4 @@
+import Landing from '../components/pages/Landing/Landing';
 import Home from '../components/pages/Home/Home';
 import Team from '../components/pages/Team/Team';
 import Plannings from '../components/pages/Plannings/Plannings';
@@ -10,7 +11,13 @@ import NotFound from '../components/pages/NotFound/NotFound';
 
 const routes = [
   {
-    path: '/Home',
+    path: '/',
+    components: Landing,
+    display: 'always',
+    exact: true,
+  },
+  {
+    path: '/home',
     components: Home,
     display: 'isAuth',
     exact: true,
@@ -37,17 +44,17 @@ const routes = [
   }, {
     path: '/signin',
     components: Signin,
-    display: 'always',
+    display: 'notAuth',
     exact: true,
   }, {
     path: '/signup',
     components: Signup,
-    display: 'always',
+    display: 'notAuth',
     exact: true,
   }, {
     path: '/passwordforgotten',
     components: PasswordForgotten,
-    display: 'always',
+    display: 'notAuth',
     exact: true,
   }, {
     path: '',

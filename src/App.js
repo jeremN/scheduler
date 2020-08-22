@@ -1,37 +1,25 @@
-import React from 'react';
-import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
+import React, { createContext } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Layout from './components/templates/Layout/Layout';
+import Routes from './components/templates/Routes/Routes';
 
-import routes from './routes/routes';
+import useAuth from './hooks/isAuthenticated.';
+
 import './App.scss';
 
-function App(props) {
+export const AuthContext = createContext(); 
 
-  const appRoutes = (
-    <Switch>
-      { routes.map(({ path, components, exact, display }, index) => {
-        let routeTag = ( 
-          <Route 
-            key={ index }
-            path={ path }
-            component={ components }
-            exact={ exact } />
-        );
-
-        return routeTag;
-      } )}
-      <Redirect to="/" />
-    </Switch>
-  )
-
+function App (props) {
 
   return (
-    <div className="App">
-      <Layout>
-        { appRoutes }
-      </Layout>
-    </div>
+    <AuthContext.Provider value={{ ...useAuth() }}>
+      <div className="App">
+        <Layout>
+          <Routes />
+        </Layout>
+      </div>
+    </AuthContext.Provider>
   );
 }
 

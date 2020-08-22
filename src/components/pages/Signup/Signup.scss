@@ -1,0 +1,18 @@
+@import '../../helpers/helpers.scss';
+
+.signup {
+  .card__signup {
+    max-width: 50%;
+    margin: auto;
+  }
+
+  .form {
+    &__inline {
+      display: flex;
+
+      > *:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+}
