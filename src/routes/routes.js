@@ -17,7 +17,7 @@ const routes = [
     exact: true,
   },
   {
-    path: '/Home',
+    path: '/home',
     components: Home,
     display: 'isAuth',
     exact: true,
@@ -44,17 +44,17 @@ const routes = [
   }, {
     path: '/signin',
     components: Signin,
-    display: 'always',
+    display: 'notAuth',
     exact: true,
   }, {
     path: '/signup',
     components: Signup,
-    display: 'always',
+    display: 'notAuth',
     exact: true,
   }, {
     path: '/passwordforgotten',
     components: PasswordForgotten,
-    display: 'always',
+    display: 'notAuth',
     exact: true,
   }, {
     path: '',

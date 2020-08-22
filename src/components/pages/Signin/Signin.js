@@ -1,7 +1,8 @@
 import React, {
   Fragment,
   useReducer,
-  useContext
+  useContext,
+  useCallback,
 } from 'react';
 
 import Card from '../../atoms/Card/Card';
@@ -15,8 +16,7 @@ import clientWrapper from '../../../utilities/fetchWrapper';
 import './Signin.scss';
 
 const Signin = props => {
-  const { dispatchState } = useContext(AuthContext);
-
+  const { login, isAuthenticated } = useContext(AuthContext);
   const signinState = {
     email: '',
     password: ''
@@ -38,27 +38,32 @@ const Signin = props => {
     });
   }
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
-    console.debug('signin')
-    
-    await clientWrapper('auth/signin', { body: { ...state } })
-      .then((result) => {
-        if (result.status === 422) {
+
+    clientWrapper('auth/login', { body: { ...state } })
+      .then(async (result) => {
+        const datas = await result;
+        if (datas.status && datas.status === 422) {
           throw new Error('Validation failed');
         }
 
-        if (result.status !== 200 && result.status !== 201) {
+        if (datas.status && datas.status !== 201) {
           throw new Error('Could not authenticate you');
         }
 
-        dispatchState({ 
-          type: 'LOGIN', 
-          payload: {
-          userID: result.userID,
-          token: result.token
-          }
-        });
+        if (datas.userID) {
+          await login({
+            userID: datas.userID,
+            token: datas.token
+          });
+          return isAuthenticated;
+        }
+      })
+      .then((authDone = false) => {
+        if (authDone) {
+          props.history.push('/home');
+        }
       })
   }
 
@@ -86,17 +91,18 @@ const Signin = props => {
                 onChangeFn={ handleChange } />
             </FormGroup>
             <FormGroup 
-            labelId="userPassword"
-            wording="Mot de passe"
-            isRequired={ true }
-            modifiers={ ['column'] }>          
-            <Input
-              id="userPassword"
-              type="password"
-              name="password"
-              value={ password }
-              onChangeFn={ handleChange } />
-          </FormGroup>
+              labelId="userPassword"
+              wording="Mot de passe"
+              isRequired={ true }
+              modifiers={ ['column'] }>          
+              <Input
+                id="userPassword"
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                value={ password }
+                onChangeFn={ handleChange } />
+            </FormGroup>
             <Button type="submit" >
               Se connecter
             </Button>

@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer, useCallback } from 'react';
 
 export const initialState = {
   isAuth: false,
@@ -22,7 +22,9 @@ export const authReducer = (currentState, action) => {
         ...currentState,
         isAuth: true,
         userId: userID,
-        token: token
+        token: token,
+        loading: false,
+        error: null
       };
     case 'ERROR':
       return {
@@ -40,23 +42,32 @@ export const authReducer = (currentState, action) => {
 
 const useAuth = () => {
   const [authState, dispatchAuth] = useReducer(authReducer, initialState);
+  
+  const loginHandler = useCallback((payload) => {
+    dispatchAuth({
+      type: 'LOGIN', 
+      payload: payload
+    })
+  }, []);
 
-  const logoutHandler = () => {
+  const logoutHandler = useCallback(() => {
     dispatchAuth({
       type: 'CLEAR'
     })
-  }
+  }, []);
 
-  const autoLogout = (milliseconds) => {
+  const autoLogoutHandler = useCallback((milliseconds) => {
     setTimeout(() => {
       logoutHandler();
     }, milliseconds);
-  }
+  }, [])
 
   return {
+    isAuthenticated: authState.isAuth,
+    isLoading: authState.loading,
     state: authState,
-    dispatchState: dispatchAuth,
-    autoLogout: autoLogout,
+    login: loginHandler,
+    autoLogout: autoLogoutHandler,
     logout: logoutHandler,
   }
 }

@@ -2,11 +2,9 @@ import React, {
   Fragment,
   useEffect,
   useReducer,
-  useMemo
 } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Header from '../../../organisms/Header/Header';
 import EditPlanningNav from '../../../organisms/EditPlanningNavigation/EditPlanningNavigation';
 import Calendar from '../../../organisms/Calendar/Calendar';
 

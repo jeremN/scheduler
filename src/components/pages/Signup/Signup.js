@@ -38,7 +38,7 @@ const Signup = props => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-
+    
     await clientWrapper('auth/signup', { body: { ...state } })
       .then((result) => {
         console.debug(result)

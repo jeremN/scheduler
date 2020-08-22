@@ -20,11 +20,11 @@ function clientWrapper (endpoint, { body, ...customConfig } = {}) {
   if (!!body) {
     config.body = JSON.stringify(body);
   }
-  console.debug('fetchWrapper', process.env, `${process.env.REACT_APP_API_ENDPOINT}/${endpoint}`)
+  
   return fetch(`${process.env.REACT_APP_API_ENDPOINT}/${endpoint}`, config)
     .then(async response => {
       const data = await response.json();
-
+      console.debug('fetchWrapper: ', response, data)
       if (response.ok) {
         return data;
       } else {
