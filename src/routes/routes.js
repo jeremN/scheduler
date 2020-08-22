@@ -57,7 +57,7 @@ const routes = [
     display: 'notAuth',
     exact: true,
   }, {
-    path: '',
+    path: '*',
     components: NotFound,
     display: 'always',
   }, 

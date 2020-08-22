@@ -57,14 +57,9 @@ const Signin = props => {
             userID: datas.userID,
             token: datas.token
           });
-          return isAuthenticated;
-        }
-      })
-      .then((authDone = false) => {
-        if (authDone) {
           props.history.push('/home');
         }
-      })
+      });
   }
 
   const {
