@@ -3,15 +3,8 @@
 .header {
   display: flex;
   align-items: center;
-  padding: 15px 45px;
-  border-bottom: 2px solid $greyLighter;
-  height: 92px;
-
-  h2 {
-    font-weight: bold;
-    font-size: 2.4rem;
-    line-height: 1.2;
-    color: $deepBlueDark;
-  }
+  padding: 10px 35px;
+  border-bottom: 2px solid $geyser;
+  background-color: $white;
 }
 

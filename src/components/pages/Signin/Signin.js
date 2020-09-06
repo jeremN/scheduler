@@ -2,7 +2,6 @@ import React, {
   Fragment,
   useReducer,
   useContext,
-  useCallback,
 } from 'react';
 
 import Card from '../../atoms/Card/Card';
@@ -16,7 +15,7 @@ import clientWrapper from '../../../utilities/fetchWrapper';
 import './Signin.scss';
 
 const Signin = props => {
-  const { login, isAuthenticated } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const signinState = {
     email: '',
     password: ''
@@ -51,11 +50,18 @@ const Signin = props => {
         if (datas.status && datas.status !== 201) {
           throw new Error('Could not authenticate you');
         }
-
+        
         if (datas.userID) {
+          const remainingMs = 60 * 60 * 1000;
+          const expireDate = new Date(new Date().getTime() + remainingMs);
+          localStorage.setItem('_scheduler_user_id', datas.userID);
+          localStorage.setItem('_scheduler_token', datas.token);
+          localStorage.setItem('_scheduler_expire_date', expireDate);
+
           await login({
-            userID: datas.userID,
-            token: datas.token
+            userId: datas.userID,
+            token: datas.token,
+            remainingTime: remainingMs
           });
           props.history.push('/home');
         }

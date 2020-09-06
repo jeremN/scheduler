@@ -2,6 +2,28 @@
 $white: hsl(0°, 0%, 100%);
 $black: hsl(0°, 0%, 0%);
 
+
+/* Colors */
+$downRiver: hsla(209°, 79%, 17%, 100%);
+$curiousBlue: hsla(209°, 82%, 51%, 100%);
+$green: hsla(168°, 63%, 48%, 100%);
+$yellow: hsla(38°, 100%, 67%, 100%);
+$red: hsla(359°, 98%, 75%, 100%);
+
+/* Grays */
+$blueBayoux: hsla(211°, 17%, 39%, 100%);
+$regentGrey: hsla(208°, 16%, 57%, 100%);
+$geyser: hsla(206°, 25%, 87%, 100%);
+$athensGrey: hsla(218°, 25%, 94%, 100%);
+$polar: hsla(206°, 64%, 98%, 100%);
+
+/* Blue color ramps */
+$bluemine: hsla(214°, 62%, 30%, 100%);
+$denim: hsla(211°, 73%, 42%, 100%);
+$jordyBlue: hsla(209°, 81%, 71%, 100%);
+$hawkesBlue: hsla(209°, 84%, 93%, 100%);
+$bluemine: hsla(206°, 80%, 96%, 100%);
+
 /* App colors */
 $green: hsl(160°, 68%, 48%) !default;
 $red: hsl(356°, 99%, 66%) !default;
@@ -31,7 +53,7 @@ $fontWeight-bold:     700 !default;
 $fontWeight-black:    900 !default;
 
 /* Line height */
-$lineHeightBase: 1.2 !default;
+$lineHeightBase: 1.5 !default;
 
 /* Links */
 $linkBaseColor: $black !default;

@@ -1,0 +1,58 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  padding: 12px;
+  border-radius: 4px;
+  background-color: $white;
+  border: 1px solid $regentGrey;
+  color: $curiousBlue;
+  transition: all 250ms ease;
+
+  &:hover {
+    color: $downRiver;
+  }
+
+  &:active {
+    background-color: $geyser;
+    color: $jordyBlue;
+  }
+
+  &--disabled {
+    background: transparent;
+    color: $regentGrey;
+
+    &:hover {
+      background-color: $geyser;
+    }
+
+    &:active {
+      background-color: $athensGrey;
+    }
+  }
+
+  &--primary {
+    background-color: $curiousBlue;
+    color: $white;
+    border-color: $curiousBlue;
+
+    &:hover {
+      background-color: $bluemine;
+      color: $white;
+      border-color: $bluemine;
+    }
+
+    &:active {
+      background-color: $jordyBlue;
+      color: $white;
+      border-color: $jordyBlue; 
+    }
+  }
+
+  &--rounded {
+    border-radius: 50%;
+  }
+}
