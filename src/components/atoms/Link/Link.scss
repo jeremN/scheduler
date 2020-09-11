@@ -1,14 +1,12 @@
-@import '../../helpers/helpers.scss';
-
 .button {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   font-weight: bold;
-  font-size: 1.4rem;
-  line-height: 1.2;
-  padding: 10px 16px;
-  border-radius: 6px;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  padding: 12px;
+  border-radius: 4px;
   background-color: var(--white);
   border: 1px solid var(--regentGrey);
   color: var(--curiousBlue);
@@ -21,6 +19,19 @@
   &:active {
     background-color: var(--geyser);
     color: var(--jordyBlue);
+  }
+
+  &--disabled {
+    background: transparent;
+    color: var(--regentGrey);
+
+    &:hover {
+      background-color: var(--geyser);
+    }
+
+    &:active {
+      background-color: var(--athensGrey);
+    }
   }
 
   &--primary {
@@ -41,24 +52,7 @@
     }
   }
 
-  &--disabled {
-    background: transparent;
-    color: var(--regentGrey);
-
-    &:hover {
-      background-color: var(--geyser);
-    }
-
-    &:active {
-      background-color: var(--athensGrey);
-    }
-  }
-
   &--rounded {
-    border-radius: 2.5rem;
-  }
-
-  &--centered {
-    justify-content: center;
+    border-radius: 50%;
   }
 }

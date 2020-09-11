@@ -6,23 +6,17 @@ export const initialState = {
   userId: null,
   token: null,
   loading: false,
+  remainingTime: 0
 }
 
 export const authReducer = (currentState, action) => {
   switch (action.type) {
     case 'LOGIN':
-      const { userID, token } = action.payload;
-      const remainingMs = 60 * 60 * 1000;
-      const expireDate = new Date(new Date().getTime() + remainingMs);
-      localStorage.setItem('_scheduler_user_id', JSON.stringify(userID));
-      localStorage.setItem('_scheduler_token', JSON.stringify(token));
-      localStorage.setItem('_scheduler_expire_date', JSON.stringify(expireDate));
-      
+      console.debug('LOGIN', action.payload)      
       return {
         ...currentState,
+        ...action.payload,
         isAuth: true,
-        userId: userID,
-        token: token,
         loading: false,
         error: null
       };
@@ -43,24 +37,26 @@ export const authReducer = (currentState, action) => {
 const useAuth = () => {
   const [authState, dispatchAuth] = useReducer(authReducer, initialState);
   
+  const logoutHandler = useCallback(() => {
+    console.debug('logout')
+    dispatchAuth({
+      type: 'CLEAR'
+    })
+  }, []);
+
+  const autoLogoutHandler = (milliseconds = 60 * 60 * 1000) => {
+    console.debug('auto logout', milliseconds)
+    setTimeout(() => {
+      logoutHandler();
+    }, milliseconds);
+  }
+  
   const loginHandler = useCallback((payload) => {
     dispatchAuth({
       type: 'LOGIN', 
       payload: payload
     })
   }, []);
-
-  const logoutHandler = useCallback(() => {
-    dispatchAuth({
-      type: 'CLEAR'
-    })
-  }, []);
-
-  const autoLogoutHandler = useCallback((milliseconds) => {
-    setTimeout(() => {
-      logoutHandler();
-    }, milliseconds);
-  }, [])
 
   return {
     isAuthenticated: authState.isAuth,

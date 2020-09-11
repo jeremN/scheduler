@@ -1,4 +1,6 @@
-import React, { useContext } from 'react';
+import React, { 
+  useContext
+ } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import routes from '../../../routes/routes';
 
@@ -15,7 +17,6 @@ const Routes = props => {
       { routes.map(({ path, components, exact, display }, index) => {
         if ((isAuthenticated && showOnAuth.includes(display)) 
           || (!isAuthenticated && showNotAuth.includes(display))) {
-          console.debug('route', path, isAuthenticated, display)
           return ( 
             <Route 
               key={ index }
@@ -24,7 +25,7 @@ const Routes = props => {
               exact={ exact } />
           );
         }
-        return null
+        return
       } )}
       <Redirect to="/" />
     </Switch>

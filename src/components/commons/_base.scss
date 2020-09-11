@@ -1,6 +1,24 @@
 @import '../helpers/helpers.scss';
 
 html {
+  --white: #{$white};
+  --black: #{$black};
+  --downRiver: #{$downRiver};
+  --curiousBlue: #{$curiousBlue};
+  --green: #{$green};
+  --yellow: #{$yellow};
+  --red: #{$red};
+  --blueBayoux: #{$blueBayoux};
+  --regentGrey: #{$regentGrey};
+  --geyser: #{$geyser};
+  --athensGrey: #{$athensGrey};
+  --polar: #{$polar};
+  --bluemine: #{$bluemine};
+  --denim: #{$denim};
+  --jordyBlue: #{$jordyBlue};
+  --hawkesBlue: #{$hawkesBlue};
+  --bluemines: #{$bluemines};
+  
   box-sizing: border-box;
   /* set base font-size to equiv "10px", which is adapted to rem unit */
   font-size: 62.5%;
@@ -78,30 +96,3 @@ img {
   justify-content: space-between;
   margin-bottom: 1rem;
 }
-
-[class*="col-"] { padding: 0 1.5rem; }
-
-.col-1 { width: 8.333%; }
-.col-2 { width: 16.667%; }
-.col-3 { width: 25%; }
-.col-4 { width: 33.334%; }
-.col-5 { width: 41.667%; }
-.col-6 { width: 50%; }
-.col-7 { width: 58.333%; }
-.col-8 { width: 66.667%; }
-.col-9 { width: 75%; }
-.col-10 { width: 83.333%; }
-.col-11 { width: 91.667%; }
-.col-12 { width: 100%; }
-.col-margin-1 { margin-left: 8.333%; }
-.col-margin-2 { margin-left: 16.667%; }
-.col-margin-3 { margin-left: 25%; }
-.col-margin-4 { margin-left: 33.334%; }
-.col-margin-5 { margin-left: 41.667%; }
-.col-margin-6 { margin-left: 50%; }
-.col-margin-7 { margin-left: 58.333%; }
-.col-margin-8 { margin-left: 66.667%; }
-.col-margin-9 { margin-left: 75%; }
-.col-margin-10 { margin-left: 83.333%; }
-.col-margin-11 { margin-left: 91.667%; }
-.col-margin-12 { margin-left: 100%; }

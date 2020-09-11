@@ -1,0 +1,16 @@
+@import '../../helpers/helpers.scss';
+
+.cardHeading {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+
+  &--withButton {
+    justify-content: space-between;
+  }
+}

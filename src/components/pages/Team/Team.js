@@ -1,16 +1,23 @@
 import React, { 
   Fragment, 
   useState, 
-  useMemo 
+  useMemo,
+  useEffect,
+  useContext,
 } from 'react';
 
 import Card from '../../atoms/Card/Card';
 import Avatar from '../../atoms/Avatar/Avatar';
 import TeamsNav from '../../organisms/TeamsNav/TeamsNav';
 
+import { AuthContext } from '../../../App';
+import clientWrapper from '../../../utilities/fetchWrapper';
+
 import './Team.scss';
 
 const Team = props => {
+  const { state } = useContext(AuthContext);
+
   const teams= [
     {
       name: 'Catherine Warren',
@@ -61,32 +68,43 @@ const Team = props => {
   ];
   const [teamList, setTeamList] = useState(teams);
 
+  useEffect(() => {
+    clientWrapper(`teams/teamsList`)
+      .then(async (result) => {
+        const datas = await result;
+
+        if (!!datas.teamsList) {
+          // await setTeamList(datas.teamsList)
+        }
+      })
+  }, [state.userId]);
+
   const teamListBody = useMemo(() => {
     return (
       <ul className="teams__listBody">
-        { teamList.map(member => (
+        { teamList.map(({ name, email, contract, poste, hours, teamName, shop, notes }) => (
           <Card>
             <div className="member__infos">
-              <Avatar letter={ member.name.charAt(0) } />
-              <span><b>{ member.name }</b> { member.email }</span>
+              <Avatar letter={ name.charAt(0) } />
+              <span><b>{ name }</b> { email }</span>
             </div>
             <div className="member__poste">
-              { member.poste }
+              { poste }
             </div>
             <div className="member__contract">
-              { member.contract }
+              { contract }
             </div>
             <div className="member__hours">
-              { member.hours }
+              { hours }
             </div>
             <div className="member__teamName">
-              { member.teamName }
+              { teamName }
             </div>
             <div className="member__shop">
-              { member.shop }
+              { shop }
             </div>
             <div className="member__notes">
-              { member.notes }
+              { notes }
             </div>
             <div className="member__actions">
               <svg 

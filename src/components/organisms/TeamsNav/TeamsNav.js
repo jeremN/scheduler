@@ -15,7 +15,7 @@ const TeamsNav = props => {
           <b>{ teamLen } 5</b> équipiers 
          </div>
          <div className="teamsNavigations__showBy">
-           <label for="showBy">Afficher par:</label>
+           <label htmlFor="showBy">Afficher par:</label>
            <select id="showBy">
              <option value="default">Défaut</option>
              <option value="poste">Poste</option>

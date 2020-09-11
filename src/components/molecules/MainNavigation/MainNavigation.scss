@@ -1,0 +1,55 @@
+@import '../../helpers/helpers.scss';
+
+.menu {
+  margin: 0 auto;
+
+  &__list {
+    margin-left: -15px;
+    margin-right: -15px;
+    display: flex;
+    flex: 1;
+  }
+
+  &__item {
+    margin: 10px 0;
+  }
+
+  &__linkIcon {
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      margin: auto;
+      align-self: center;
+      justify-self: center;
+      
+      path {
+        fill: $downRiver;
+      }
+    }
+  } 
+
+  &__link {
+    color: $downRiver;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    border-bottom: 4px solid transparent;
+
+    &:hover,
+    &:active,
+    &__active {
+      color: $curiousBlue;
+      border-color: $curiousBlue;
+
+      svg path {
+        fill: $curiousBlue;
+      }
+    }
+  }
+}
