@@ -4,6 +4,8 @@ import React, {
   useEffect,
 } from 'react';
 
+import Calendar from 'react-calendar';
+
 import Card from '../../atoms/Card/Card';
 import CardHeading from '../../molecules/CardHeading/CardHeading';
 import ButtonLink from '../../atoms/Link/Link';
@@ -34,26 +36,18 @@ const Home = props => {
           await setUser(datas.user)
         }
       })
-  }, []);
+  }, [state.userId]);
+
+  const noPlanningDefault = (<li>Vous n'avez pas créer de planning</li>);
+  const noTeamDefault = (<li>Vous n'avez pas créer d'équipe</li>);
   
-  function addUserPlannings () {
-    if (user.plannings.length) {
-      return user.plannings.map(({ _id, title }) => {
-        return (<li key={ _id }><a href={ _id }>{ title }</a></li>)
-      })
+  function addListLink (list, keyToAdd, defaultLink) {
+    if (list.length) {
+      return list.map((item) => (
+        <li key={ item._id }><a href={ item._id }>{ item[keyToAdd] }</a></li>)
+      );
     }
-
-    return (<li>Vous n'avez pas créer de planning</li>)
-  }
-
-  function addUserTeams () {
-    if (user.team.length) {
-      return user.team.map(({ _id, name }) => {
-        return (<li key={ _id }><a href={ _id }>{ name }</a></li>)
-      })
-    }
-
-    return (<li>Vous n'avez pas créer d'équipe</li>)
+    return defaultLink;
   }
 
   return (
@@ -62,15 +56,21 @@ const Home = props => {
       <div className="panels panels--left">
         <div className="panel">
           <CardHeading cardTitle={ 'Calendrier' } />
-          <Card></Card>
+          <Card>
+            <Calendar />
+          </Card>
         </div>
         <div className="panel">
           <CardHeading cardTitle={ 'Mon magasin' } />
-          <Card></Card>
+          <Card>
+            Pas de magasin enregistrer
+          </Card>
         </div>
         <div className="panel">
           <CardHeading cardTitle={ 'Activités' } />
-          <Card></Card>
+          <Card>
+            Pas d'activitées pour le moment
+          </Card>
         </div>
       </div>
       <div className="panels panels--center">
@@ -85,7 +85,7 @@ const Home = props => {
           </CardHeading>
           <Card>
             <ul>
-              { addUserPlannings() }
+              { addListLink(user.plannings, 'title', noPlanningDefault) }
             </ul>
           </Card>
         </div>
@@ -102,7 +102,7 @@ const Home = props => {
           </CardHeading>
           <Card>
             <ul>
-              { addUserTeams() }
+              { addListLink(user.team, 'name', noTeamDefault) }
             </ul>
           </Card>
         </div>

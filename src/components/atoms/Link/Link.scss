@@ -7,48 +7,48 @@
   line-height: 1.5;
   padding: 12px;
   border-radius: 4px;
-  background-color: $white;
-  border: 1px solid $regentGrey;
-  color: $curiousBlue;
+  background-color: var(--white);
+  border: 1px solid var(--regentGrey);
+  color: var(--curiousBlue);
   transition: all 250ms ease;
 
   &:hover {
-    color: $downRiver;
+    color: var(--downRiver);
   }
 
   &:active {
-    background-color: $geyser;
-    color: $jordyBlue;
+    background-color: var(--geyser);
+    color: var(--jordyBlue);
   }
 
   &--disabled {
     background: transparent;
-    color: $regentGrey;
+    color: var(--regentGrey);
 
     &:hover {
-      background-color: $geyser;
+      background-color: var(--geyser);
     }
 
     &:active {
-      background-color: $athensGrey;
+      background-color: var(--athensGrey);
     }
   }
 
   &--primary {
-    background-color: $curiousBlue;
-    color: $white;
-    border-color: $curiousBlue;
+    background-color: var(--curiousBlue);
+    color: var(--white);
+    border-color: var(--curiousBlue);
 
     &:hover {
-      background-color: $bluemine;
-      color: $white;
-      border-color: $bluemine;
+      background-color: var(--bluemine);
+      color: var(--white);
+      border-color: var(--bluemine);
     }
 
     &:active {
-      background-color: $jordyBlue;
-      color: $white;
-      border-color: $jordyBlue; 
+      background-color: var(--jordyBlue);
+      color: var(--white);
+      border-color: var(--jordyBlue); 
     }
   }
 

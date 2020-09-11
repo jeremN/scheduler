@@ -7,39 +7,58 @@
   font-weight: bold;
   font-size: 1.4rem;
   line-height: 1.2;
-  padding: 10px;
+  padding: 10px 16px;
   border-radius: 6px;
-  background-color: $white;
-  border: 1px solid hsl(230°, 25%, 95%);
-  color: $greyDark;
-  transition: all 200ms;
+  background-color: var(--white);
+  border: 1px solid var(--regentGrey);
+  color: var(--curiousBlue);
+  transition: all 250ms ease;
 
   &:hover {
-    color: $deepBlueDark;
-    border-color: $greyDark;
+    color: var(--downRiver);
+  }
+
+  &:active {
+    background-color: var(--geyser);
+    color: var(--jordyBlue);
   }
 
   &--primary {
-    background-color: $blueDarker;
-    color: $white;
-    border-color: $blue;
+    background-color: var(--curiousBlue);
+    color: var(--white);
+    border-color: var(--curiousBlue);
 
     &:hover {
-      background-color: mix($blueDarker, $white, 80%);
-      color: $white;
-      border-color: $blueDarker;
+      background-color: var(--bluemine);
+      color: var(--white);
+      border-color: var(--bluemine);
+    }
+
+    &:active {
+      background-color: var(--jordyBlue);
+      color: var(--white);
+      border-color: var(--jordyBlue); 
+    }
+  }
+
+  &--disabled {
+    background: transparent;
+    color: var(--regentGrey);
+
+    &:hover {
+      background-color: var(--geyser);
+    }
+
+    &:active {
+      background-color: var(--athensGrey);
     }
   }
 
   &--rounded {
-    border-radius: 25px;
+    border-radius: 2.5rem;
   }
 
   &--centered {
     justify-content: center;
-  }
-
-  &--withIcon {
-    
   }
 }
