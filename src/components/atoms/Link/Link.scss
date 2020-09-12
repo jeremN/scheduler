@@ -20,6 +20,20 @@
     background-color: var(--geyser);
     color: var(--jordyBlue);
   }
+  
+  &--simple {
+    padding: 10px 0;
+    background: none;
+    border: 0;
+
+    &:hover {
+      color: var(--downRiver);
+    }
+
+    &:active {
+      color: var(--jordyBlue);
+    }
+  }
 
   &--disabled {
     background: transparent;

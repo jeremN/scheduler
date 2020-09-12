@@ -2,27 +2,32 @@ import React from 'react';
 
 import Buttons from '../../atoms/Buttons/Buttons';
 import Icon from '../../atoms/Icon/Icon';
+import Select from '../../atoms/SelectInput/SelectInput';
 
 import './TeamsNav.scss';
 
 const TeamsNav = props => {
-  const { teamLen } = props;
+  const { 
+    onFilterChange,
+    showByOptionsArray, 
+    defaultFilterValue,
+    teamLen = 0,
+  } = props;
 
   return (
      <div className="teamsNavigations">
       <div className="teamsNavigations__leftBlock">
          <div className="teamsNavigations__length">
-          <b>{ teamLen } 5</b> équipiers 
+          <b>{ teamLen }</b> équipiers 
          </div>
          <div className="teamsNavigations__showBy">
            <label htmlFor="showBy">Afficher par:</label>
-           <select id="showBy">
-             <option value="default">Défaut</option>
-             <option value="poste">Poste</option>
-             <option value="magasin">Magasin</option>
-             <option value="contract">Contrat</option>
-             <option value="team">Equipe</option>
-           </select> 
+           <Select 
+            id={ 'showBy' } 
+            name={ 'filterListBy' } 
+            value={ defaultFilterValue } 
+            optionsArray={ showByOptionsArray }
+            onChangeFn={ onFilterChange } />
          </div>
        </div>
        <div className="teamsNavigations__rightBlock">

@@ -1,18 +1,45 @@
 @import '../../helpers/helpers.scss';
 
 .signup {
-  .card__signup {
-    max-width: 50%;
-    margin: auto;
+  padding: 3rem;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  h2 {
+    color: var(--downRiver);
+    margin-top: 0;
+  }
+  
+  form {
+    margin: 10vh 0 10rem;
   }
 
   .form {
+
     &__inline {
       display: flex;
+
+      > * {
+        min-width: calc((100% - 10px) / 2);
+      }
 
       > *:first-child {
         margin-right: 10px;
       }
     }
   }
+  
+  button[type="submit"] {
+    margin: 5rem 0 0 auto;
+  }
+
+  .button--simple {
+    background: none;
+    border: 0;
+    padding: 10px 0;
+    font-size: 1.2rem;
+  }
+  
 }

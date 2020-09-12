@@ -1,0 +1,57 @@
+@import '../../helpers/helpers.scss';
+
+%F14Lh12B {
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+%CdeepBlue {
+  color: var(--downRiver);
+}
+
+.member {
+  &__infos {
+    display: flex;
+    flex-basis: 320px; 
+
+    span {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      color: var(--regentGrey);
+      font-size: 1.4rem;
+    }
+
+    b {
+      font-weight: bold;
+      font-size: 1.8rem;
+      color: var(--downRiver);
+    }
+  }
+
+  &__poste {
+    @extend %F14Lh12B;
+    @extend %CdeepBlue;
+    flex-basis: 240px;
+    text-align: left; 
+  }
+
+  &__contract,
+  &__hours,
+  &__teamName,
+  &__shop {
+    @extend %F14Lh12B;
+    @extend %CdeepBlue;
+    @extend %teamCellWidthItem;
+  }
+
+  &__notes {
+    @extend %F14Lh12B;
+    @extend %teamCellWidthItem;
+    color: var(--regentGrey);
+  }
+
+  &__actions {
+    flex-basis: 5rem;
+  }
+}

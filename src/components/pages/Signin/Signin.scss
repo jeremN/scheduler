@@ -1,8 +1,36 @@
 @import '../../helpers/helpers.scss';
 
 .signin {
-  .card__signin {
-    max-width: 50%;
-    margin: auto;
+  padding: 3rem;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  h2 {
+    color: var(--downRiver);
+    margin-top: 0;
+  }
+
+  form {
+    margin: 10vh 0 10rem;
+  }
+
+  .form__inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 5rem;
+  }
+
+  .button--simple {
+    background: none;
+    border: 0;
+    padding: 10px 0;
+    font-size: 1.2rem;
+  }
+
+  .button--grey {
+    color: var(--geyser);
   }
 }

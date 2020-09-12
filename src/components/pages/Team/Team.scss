@@ -8,24 +8,11 @@
   -webkit-line-clamp: 1;
 }
 
-%F14Lh12B {
-  font-weight: bold;
-  font-size: 1.4rem;
-}
-
-%CdeepBlue {
-  color: $deepBlue;
-}
-
 %listHeadStyles {
   font-weight: bold;
   font-size: 1.2rem;
   text-transform: capitalize;
-  color: $greyDark;
-}
-
-%widthItem {
-  flex-basis: calc((100% - 240px - 320px - 50px) / 5);
+  color: var(--regentGrey);
 }
 
 .teams {
@@ -47,19 +34,19 @@
         flex-basis: 240px;
       }
       &:nth-child(3) {
-        @extend %widthItem;
+        @extend %teamCellWidthItem;
       }
       &:nth-child(4) {
-        @extend %widthItem;
+        @extend %teamCellWidthItem;
       }
       &:nth-child(5) {
-        @extend %widthItem;
+        @extend %teamCellWidthItem;
       }
       &:nth-child(6) {
-        @extend %widthItem;
+        @extend %teamCellWidthItem;
       }
       &:nth-child(7) {
-        @extend %widthItem;
+        @extend %teamCellWidthItem;
       }
       &:last-child {
         flex-basis: 50px;
@@ -94,62 +81,5 @@
     max-width: 40px;
     min-height: 40px;
     margin-right: 18px;
-  }
-}
-
-.member {
-  &__infos {
-    display: flex;
-    flex-basis: 320px; 
-
-    span {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      color: var(--regentGrey);
-      font-size: 1.4rem;
-    }
-
-    b {
-      font-weight: bold;
-      font-size: 1.8rem;
-      color: $deepBlue;
-    }
-  }
-
-  &__poste {
-    @extend %F14Lh12B;
-    @extend %CdeepBlue;
-    flex-basis: 240px;
-    text-align: left; 
-
-  }
-  &__contract {
-    @extend %F14Lh12B;
-    @extend %CdeepBlue;
-    @extend %widthItem;
-  }
-  &__hours {
-    @extend %F14Lh12B;
-    @extend %CdeepBlue;
-    @extend %widthItem;
-  }
-  &__teamName {
-    @extend %F14Lh12B;
-    @extend %CdeepBlue;
-    @extend %widthItem;
-  }
-  &__shop {
-    @extend %F14Lh12B;
-    @extend %CdeepBlue;
-    @extend %widthItem;
-  }
-  &__notes {
-    @extend %F14Lh12B;
-    @extend %widthItem;
-    color: $greyDark;
-  }
-  &__actions {
-    flex-basis: 50px;
   }
 }

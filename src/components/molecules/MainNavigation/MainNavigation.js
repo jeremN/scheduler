@@ -63,9 +63,8 @@ const MainNavigation = props => {
           if ((isAuthenticated && showOnAuth.includes(display)) 
           || (!isAuthenticated && showNotAuth.includes(display))) { 
             return (
-              <li>
+              <li key={ `route_to_${to}` }>
                 <NavigationItem
-                  key={ `route_to_${to}` }
                   linkTo={ `/${to}`}
                   currentClasses={ `menu__link list__link ${icon ? 'link--withIcon' : '' }` }
                   activeClass={ 'menu__link__active' }

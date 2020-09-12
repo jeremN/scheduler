@@ -25,7 +25,7 @@ const Routes = props => {
               exact={ exact } />
           );
         }
-        return
+        return null
       } )}
       <Redirect to="/" />
     </Switch>

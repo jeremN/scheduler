@@ -3,10 +3,10 @@ import React, {
   useReducer
 } from 'react';
 
-import Card from '../../atoms/Card/Card';
 import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
+import ButtonLink from '../../atoms/Link/Link';
 
 import clientWrapper from '../../../utilities/fetchWrapper';
 
@@ -65,66 +65,71 @@ const Signup = props => {
 
   return (
     <Fragment>
-      <div className="signup">
-        <h2>Signup</h2>
-        <Card modifiers={ ['primary'] } classes={ ['card__signup'] }>
-          <form className="signup__form" onSubmit={ handleSubmit }>
-            <div className="form_inline">
-              <FormGroup 
-                labelId="userFirstname"
-                wording="Prénom"
-                isRequired={ true }
-                modifiers={ ['column'] }>          
-                <Input
-                  id="userFirstname"
-                  type="text"
-                  name="firstname"
-                  value={ firstname }
-                  onChangeFn={ handleChange } />
-              </FormGroup>
-              <FormGroup 
-                labelId="userLastname"
-                wording="Nom"
-                isRequired={ true }
-                modifiers={ ['column'] }>          
-                <Input
-                  id="planningName"
-                  type="text"
-                  name="lastname"
-                  value={ lastname }
-                  onChangeFn={ handleChange } />
-              </FormGroup>
-            </div>
+      <section className="signup">
+        <h2>Créer un compte</h2>
+        <form className="signup__form" onSubmit={ handleSubmit }>
+          <div className="form__inline">
             <FormGroup 
-              labelId="userEmail"
-              wording="Email"
+              labelId="userFirstname"
+              wording="Prénom"
               isRequired={ true }
               modifiers={ ['column'] }>          
               <Input
-                id="userEmail"
-                type="email"
-                name="email"
-                value={ email }
+                id="userFirstname"
+                type="text"
+                name="firstname"
+                value={ firstname }
                 onChangeFn={ handleChange } />
             </FormGroup>
             <FormGroup 
-            labelId="userPassword"
-            wording="Mot de passe"
+              labelId="userLastname"
+              wording="Nom"
+              isRequired={ true }
+              modifiers={ ['column'] }>          
+              <Input
+                id="planningName"
+                type="text"
+                name="lastname"
+                value={ lastname }
+                onChangeFn={ handleChange } />
+            </FormGroup>
+          </div>
+          <FormGroup 
+            labelId="userEmail"
+            wording="Email"
             isRequired={ true }
             modifiers={ ['column'] }>          
             <Input
-              id="userPassword"
-              type="password"
-              name="password"
-              value={ password }
+              id="userEmail"
+              type="email"
+              name="email"
+              value={ email }
               onChangeFn={ handleChange } />
           </FormGroup>
-            <Button type="submit" >
-              S'inscrire
-            </Button>
-          </form>
-        </Card>
-      </div>
+          <FormGroup 
+          labelId="userPassword"
+          wording="Mot de passe"
+          isRequired={ true }
+          modifiers={ ['column'] }>          
+          <Input
+            id="userPassword"
+            type="password"
+            name="password"
+            value={ password }
+            onChangeFn={ handleChange } />
+        </FormGroup>
+          <Button modifiers={ ['primary'] } type="submit" >
+            S'inscrire
+          </Button>
+        </form>
+        <ButtonLink 
+          linkTo="/signup" 
+          linkId="signupLink"
+          modifiers={ ['simple'] }>
+          Vous avez déjà un compte ? Se connecter
+        </ButtonLink>
+      </section>
+      <div class="signup__illustration"></div>
     </Fragment>
   );
 };

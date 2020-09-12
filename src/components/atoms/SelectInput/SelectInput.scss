@@ -1,0 +1,10 @@
+@import '../../helpers/helpers.scss';
+
+.form__field {
+  @extend %formField;
+  text-align: left;
+  
+  &--centered {
+    text-align: center;
+  }
+}
