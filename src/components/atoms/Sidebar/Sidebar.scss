@@ -1,0 +1,14 @@
+@import '../../helpers/helpers.scss';
+
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: calc(7rem + 6.8rem);
+  transform: translateX(-100%);
+  transition: transform ease-out 0.4s;
+
+
+  &--isVisible {
+    transform: translateX(0);
+  }
+}

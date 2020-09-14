@@ -1,11 +1,16 @@
 import React from 'react';
 
+import {
+  formattedClasses,
+  formattedModifiers
+} from '../../../utilities/utilities';
+
 import './Buttons.scss';
 
 const Buttons = ({ children, clicked, tag = 'button', modifiers = null, type = 'button', classes = null }) => {
   const BtnTag = `${tag}`; 
-  const btnModifiers = Array.isArray(modifiers) && modifiers.length ? modifiers.map(modifier => `button--${modifier}`).join(' ') : '';
-  const btnClasses = Array.isArray(classes) && classes.length ? classes.join(' ') : '';
+  const btnModifiers = formattedModifiers('button', modifiers);
+  const btnClasses = formattedClasses(classes);
 
   return (
     <BtnTag 

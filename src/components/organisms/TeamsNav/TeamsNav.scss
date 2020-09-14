@@ -4,9 +4,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 13px 45px;
-  height: 68px;
+  padding: 1.3rem 4.5rem ;
+  min-height: 6.8rem;
   border-bottom: 2px solid var(--geyser);
+  background-color: var(--athensGrey);
 
   &__leftBlock,
   &__rightBlock {
@@ -20,19 +21,19 @@
     align-items: center;
     font-size: 1.2rem;
     font-weight: bold;
-    color: $greyDark;
-    padding-right: 40px;
+    color: var(--regentGrey);
+    padding-right: 4rem;
     border-right: 2px solid var(--geyser);
 
     b {
       font-size: 3.6rem;
       color: var(--downRiver);
-      padding-right: 13px;
+      padding-right: 1.3rem;
     }
   }
 
   &__showBy {
-    padding-left: 40px;
+    padding-left: 4rem;
   }
 
   label,
@@ -43,15 +44,11 @@
   }
 
   label {
-    margin-right: 10px;
+    margin-right: 1rem;
   }
 
   select {
-    padding: 10px;
-    text-align: center;
-    border: 0;
-    border-radius: 6px;
-    min-width: 175px;
+    min-width: 17.5rem;
   }
 
   .button {

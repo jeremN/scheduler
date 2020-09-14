@@ -129,7 +129,7 @@ const Signup = props => {
           Vous avez déjà un compte ? Se connecter
         </ButtonLink>
       </section>
-      <div class="signup__illustration"></div>
+      <div className="signup__illustration"></div>
     </Fragment>
   );
 };

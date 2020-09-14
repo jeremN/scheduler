@@ -1,17 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const NavigationLink = ({ linkTo, isExact, activeClass, currentClasses, children }) => {
+import {
+  formattedClasses,
+  formattedModifiers
+} from '../../../utilities/utilities';
 
-  return (
-    <NavLink
-      to={ linkTo }
-      exact={ isExact }
-      activeClassName={ activeClass }
-      className={ [currentClasses].join(' ') }>
-      { children }
-    </NavLink>
-  );
-}
+const NavigationLink = ({ linkTo, isExact, activeClass, currentClasses, children }) => (
+  <NavLink
+    to={ linkTo }
+    exact={ isExact }
+    activeClassName={ activeClass }
+    className={ [currentClasses].join(' ') }>
+    { children }
+  </NavLink>
+);
 
 export default NavigationLink;

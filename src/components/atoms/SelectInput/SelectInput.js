@@ -26,7 +26,7 @@ const Select = ({
       name={ name ? name : id }
       value={ value } 
       onChange={ onChangeFn }>
-      { optionsArray.map((option, index) => (<option key={ option.value } value={ option.value }>{ option.wording }</option>)) }
+      { optionsArray.map((option) => (<option key={ option.value } value={ option.value }>{ option.wording }</option>)) }
     </select> 
   );
 }

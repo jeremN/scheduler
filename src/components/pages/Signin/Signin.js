@@ -122,7 +122,7 @@ const Signin = props => {
           Vous n'avez pas de compte ? Créer un compte
         </ButtonLink>
       </section>
-      <div class="signin__illustration"></div>
+      <div className="signin__illustration"></div>
     </Fragment>
   );
 };
