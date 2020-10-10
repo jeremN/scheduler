@@ -7,7 +7,6 @@ import './TeamMemberCard.scss';
 
 const TeamMemberCard = ({ member, onClickHandler = () => {} }, index) => (
   <Card 
-    key={ member._id } 
     tag={ 'li' } 
     cardClasses={ ['member'] }>
     <div className="member__infos">

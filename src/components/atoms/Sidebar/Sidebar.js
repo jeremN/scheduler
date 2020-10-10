@@ -7,21 +7,27 @@ import {
 
 import './Sidebar.scss';
 
-const Sidebar = props => {
+function Sidebar (props) {
   const sidebarModifiers = formattedModifiers('sidebar', props.modifiers);
   const sidebarClasses = formattedClasses(props.classes);
 
   return (
     <div className={ `sidebar ${sidebarModifiers} ${sidebarClasses}` }>
-      <div className="sidebar__heading">
-        { props.sidebarHeading }
-      </div>
-      <div className="sidebar__content">
-        { props.children }
-      </div>
-      { props.sidebarFooter ? (<div className="sidebar__footer">{ props.sidebarFooter }</div>) : null }
+      { props.children }
     </div>
   );
 }
 
-export default Sidebar;
+function SidebarHeading (props) {
+  return (
+    <div className="sidebar__heading">{ props.children }</div>
+  );
+}
+
+function SidebarContent (props) {
+  return (
+    <div className="sidebar__content">{ props.children }</div>
+  );
+}
+
+export { Sidebar, SidebarHeading, SidebarContent };

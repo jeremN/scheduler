@@ -30,6 +30,10 @@
       color: var(--downRiver);
       padding-right: 1.3rem;
     }
+
+    + * {
+      padding-left: 4rem;
+    }
   }
 
   &__showBy {

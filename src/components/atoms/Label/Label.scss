@@ -1,0 +1,11 @@
+@import '../../helpers/helpers.scss';
+
+.form__label {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  color: var(--downRiver);
+
+  small {
+    font-size: 1rem;
+  }
+}

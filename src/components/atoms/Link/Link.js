@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-  formattedClasses,
   formattedModifiers
 } from '../../../utilities/utilities';
 

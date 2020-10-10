@@ -1,4 +1,4 @@
-@import '../../helpers/helpers.scss';
+@import "../../helpers/helpers.scss";
 
 %ellipsis {
   display: -webkit-box;
@@ -52,13 +52,13 @@
         flex-basis: 50px;
       }
     }
-  } 
+  }
 
   &__listBody {
     display: flex;
     flex-direction: column;
   }
-  
+
   .card {
     display: flex;
     align-items: center;
@@ -81,5 +81,14 @@
     max-width: 40px;
     min-height: 40px;
     margin-right: 18px;
+  }
+
+  + .sidebar {
+    overflow-y: scroll;
+    max-height: 100%;
+
+    .sidebar__content {
+      padding-bottom: 5rem;
+    }
   }
 }
