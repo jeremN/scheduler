@@ -1,7 +1,4 @@
-import React, {
-  Fragment,
-  useReducer
-} from 'react';
+import React, { Fragment, useReducer } from 'react';
 
 import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
@@ -12,36 +9,35 @@ import clientWrapper from '../../../utilities/fetchWrapper';
 
 import './Signup.scss';
 
-const Signup = props => {
+const Signup = (props) => {
   const signupState = {
     email: '',
     firstname: '',
     lastname: '',
-    password: ''
-  }
+    password: '',
+  };
 
   const signupReducer = (state, { field, value }) => {
     return {
       ...state,
-      [field]: value
-    }
-  }
+      [field]: value,
+    };
+  };
 
   const [state, setState] = useReducer(signupReducer, signupState);
 
   const handleChange = (e, field = null, val = null) => {
     setState({
       field: field ? field : e.target.name,
-      value: val ? val : e.target.value
+      value: val ? val : e.target.value,
     });
-  }
+  };
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    
-    await clientWrapper('auth/signup', { body: { ...state } })
-      .then((result) => {
-        console.debug(result)
+
+    await clientWrapper('auth/signup', { body: { ...state } }).then(
+      (result) => {
         if (result.status && result.status === 422) {
           throw new Error('Validation failed');
         }
@@ -53,79 +49,76 @@ const Signup = props => {
         if (!!result.userID) {
           props.history.push('/signin');
         }
-      })
-  }
+      }
+    );
+  };
 
-  const {
-    email, 
-    firstname,
-    lastname, 
-    password
-  } = state;
+  const { email, firstname, lastname, password } = state;
 
   return (
     <Fragment>
       <section className="signup">
         <h2>Créer un compte</h2>
-        <form className="signup__form" onSubmit={ handleSubmit }>
+        <form className="signup__form" onSubmit={handleSubmit}>
           <div className="form__inline">
-            <FormGroup 
+            <FormGroup
               labelId="userFirstname"
               wording="Prénom"
-              isRequired={ true }
-              modifiers={ ['column'] }>          
+              isRequired={true}
+              modifiers={['column']}>
               <Input
                 id="userFirstname"
                 type="text"
                 name="firstname"
-                value={ firstname }
-                onChangeFn={ handleChange } />
+                value={firstname}
+                onChangeFn={handleChange}
+              />
             </FormGroup>
-            <FormGroup 
+            <FormGroup
               labelId="userLastname"
               wording="Nom"
-              isRequired={ true }
-              modifiers={ ['column'] }>          
+              isRequired={true}
+              modifiers={['column']}>
               <Input
-                id="planningName"
+                id="userLastname"
                 type="text"
                 name="lastname"
-                value={ lastname }
-                onChangeFn={ handleChange } />
+                value={lastname}
+                onChangeFn={handleChange}
+              />
             </FormGroup>
           </div>
-          <FormGroup 
+          <FormGroup
             labelId="userEmail"
             wording="Email"
-            isRequired={ true }
-            modifiers={ ['column'] }>          
+            isRequired={true}
+            modifiers={['column']}>
             <Input
               id="userEmail"
               type="email"
               name="email"
-              value={ email }
-              onChangeFn={ handleChange } />
+              value={email}
+              onChangeFn={handleChange}
+            />
           </FormGroup>
-          <FormGroup 
-          labelId="userPassword"
-          wording="Mot de passe"
-          isRequired={ true }
-          modifiers={ ['column'] }>          
-          <Input
-            id="userPassword"
-            type="password"
-            name="password"
-            value={ password }
-            onChangeFn={ handleChange } />
-        </FormGroup>
-          <Button modifiers={ ['primary'] } type="submit" >
+          <FormGroup
+            labelId="userPassword"
+            wording="Mot de passe"
+            isRequired={true}
+            modifiers={['column']}>
+            <Input
+              id="userPassword"
+              type="password"
+              name="password"
+              value={password}
+              onChangeFn={handleChange}
+            />
+          </FormGroup>
+          <Button modifiers={['primary']} type="submit">
             S'inscrire
           </Button>
         </form>
-        <ButtonLink 
-          linkTo="/signup" 
-          linkId="signupLink"
-          modifiers={ ['simple'] }>
+        <ButtonLink linkTo="/signup" linkId="signupLink" modifiers={['simple']}>
           Vous avez déjà un compte ? Se connecter
         </ButtonLink>
       </section>
