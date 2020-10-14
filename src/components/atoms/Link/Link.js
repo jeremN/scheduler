@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  formattedModifiers
+} from '../../../utilities/utilities';
+
 import '../Buttons/Buttons.scss';
 
 const ButtonLink = ({ linkTo, linkId, children, linkClasses, modifiers }) => {
-  const mod = modifiers ? modifiers.map(modifier => `button--${modifier}`).join(' ') : '';
+  const mod = formattedModifiers('button', modifiers);
 
   return (
     <Link

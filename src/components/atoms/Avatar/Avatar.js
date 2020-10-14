@@ -2,8 +2,12 @@ import React from 'react';
 
 import './Avatar.scss';
 
-const Avatar = ({ letter, modifiers = ['avatar--default'] }) => {
-  const avatarModifiers = Array.isArray(modifiers) && modifiers.length ? modifiers.join(' ') : modifiers; 
+import {
+  formattedModifiers
+} from '../../../utilities/utilities';
+
+const Avatar = ({ letter, modifiers = ['default'] }) => {
+  const avatarModifiers = formattedModifiers('avatar', modifiers); 
 
   return (
     <span className={ `avatar ${avatarModifiers}` }>

@@ -3,8 +3,6 @@
 @import 'components/commons/reset';
 @import 'components/commons/base';
 
-$app-bgColor--default: hsl(218°, 44%, 96%);
-
 html, 
 body, 
 #root {
@@ -16,5 +14,5 @@ body,
   display: grid;
   grid-template-rows: 7rem 1fr;
   min-height: 100%;
-  background-color: $polar;
+  background-color: var(--polar);
 }

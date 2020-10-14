@@ -1,0 +1,26 @@
+@import '../../helpers/helpers.scss';
+
+.sidebar {
+  position: absolute;
+  right: 0;
+  top: calc(7rem + 8.2rem);
+  bottom: 0;
+  transform: translateX(-100%);
+  transition: transform ease-out 0.4s;
+  min-width: 25vw;
+  min-height: calc(100vh - 7rem - 8.2rem);
+  background-color: var(--white);
+  border-left: 2px solid var(--geyser);
+  padding: 1.5rem;
+
+  &--isVisible {
+    transform: translateX(0);
+  }
+
+  &__heading {
+    color: var(--curiousBlue);
+    font-size: 2rem;
+    font-weight: bold;
+    padding-bottom: 3rem;
+  }
+}

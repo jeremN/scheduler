@@ -4,10 +4,10 @@ import React, {
   useContext,
 } from 'react';
 
-import Card from '../../atoms/Card/Card';
 import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
+import ButtonLink from '../../atoms/Link/Link';
 
 import { AuthContext } from '../../../App';
 import clientWrapper from '../../../utilities/fetchWrapper';
@@ -52,7 +52,7 @@ const Signin = props => {
         }
         
         if (datas.userID) {
-          const remainingMs = 60 * 60 * 1000;
+          const remainingMs = 120 * 60 * 1000;
           const expireDate = new Date(new Date().getTime() + remainingMs);
           localStorage.setItem('_scheduler_user_id', datas.userID);
           localStorage.setItem('_scheduler_token', datas.token);
@@ -75,41 +75,54 @@ const Signin = props => {
 
   return (
     <Fragment>
-      <div className="signin">
-        <h2>Signin</h2>
-        <Card modifiers={ ['primary'] } classes={ ['card__signin'] }>
-          <form className="signup__form" onSubmit={ handleSubmit }>
-            <FormGroup 
-              labelId="userEmail"
-              wording="Email"
-              isRequired={ true }
-              modifiers={ ['column'] }>          
-              <Input
-                id="userEmail"
-                type="email"
-                name="email"
-                value={ email }
-                onChangeFn={ handleChange } />
-            </FormGroup>
-            <FormGroup 
-              labelId="userPassword"
-              wording="Mot de passe"
-              isRequired={ true }
-              modifiers={ ['column'] }>          
-              <Input
-                id="userPassword"
-                type="password"
-                name="password"
-                autocomplete="current-password"
-                value={ password }
-                onChangeFn={ handleChange } />
-            </FormGroup>
-            <Button type="submit" >
+      <section className="signin">
+        <h2>Se connecter</h2>
+        <form className="signup__form" onSubmit={ handleSubmit }>
+          <FormGroup 
+            labelId="userEmail"
+            wording="Email"
+            isRequired={ true }
+            modifiers={ ['column'] }>          
+            <Input
+              id="userEmail"
+              type="email"
+              name="email"
+              value={ email }
+              onChangeFn={ handleChange } />
+          </FormGroup>
+          <FormGroup 
+            labelId="userPassword"
+            wording="Mot de passe"
+            isRequired={ true }
+            modifiers={ ['column'] }>          
+            <Input
+              id="userPassword"
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              value={ password }
+              onChangeFn={ handleChange } />
+          </FormGroup>
+          <div className="form__inline">
+            <ButtonLink 
+              linkTo="/passwordforgotten" 
+              linkId="signupLink"
+              modifiers={ ['simple'] }>
+              Mot de passe oublié
+            </ButtonLink>
+            <Button modifiers={ ['primary'] } type="submit" >
               Se connecter
             </Button>
-          </form>
-        </Card>
-      </div>
+          </div>
+        </form>
+        <ButtonLink 
+          linkTo="/signup" 
+          linkId="signupLink"
+          modifiers={ ['simple'] }>
+          Vous n'avez pas de compte ? Créer un compte
+        </ButtonLink>
+      </section>
+      <div className="signin__illustration"></div>
     </Fragment>
   );
 };

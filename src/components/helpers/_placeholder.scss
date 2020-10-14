@@ -34,9 +34,9 @@
 %formField {
   font-size: 1.4rem;
   font-weight: bold;
-  color: $greyDark;
+  color: var(--regentGrey);
   padding: 10px;
-  border: 0;
+  border: 1px solid var(--regentGrey);
   border-radius: 6px;
 }
 
@@ -73,4 +73,8 @@
   font-weight: 600;
   font-size: 1.8rem;
   line-height: $lineHeightBase;
+}
+
+%teamCellWidthItem {
+  flex-basis: calc((100% - 240px - 320px - 50px) / 5);
 }

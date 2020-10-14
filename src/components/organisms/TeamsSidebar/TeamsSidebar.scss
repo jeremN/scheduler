@@ -1,0 +1,18 @@
+@import "../../helpers/helpers.scss";
+
+.form__teamMember,
+.form__newTeam {
+  button[type="submit"] {
+    margin-top: 2rem;
+  }
+
+  .teamMember {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-top: 1px dotted var(--regentGrey);
+
+    &:first {
+      border: 0;
+    }
+  }
+}

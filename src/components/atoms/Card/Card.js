@@ -1,10 +1,15 @@
 import React from 'react';
 
+import {
+  formattedClasses,
+  formattedModifiers
+} from '../../../utilities/utilities';
+
 import './Card.scss';
 
 const Card = ({ tag = 'div', modifiers = null, classes = null, children }) => {
-  const cardModifiers = Array.isArray(modifiers) && modifiers.length ? modifiers.map(modifier => `card--${modifier}`).join(' ') : '';
-  const cardClasses = Array.isArray(classes) && classes.length ? classes.join(' ') : '';
+  const cardModifiers = formattedModifiers('card', modifiers);
+  const cardClasses = formattedClasses(classes);
   const CardTag = `${tag}`;
 
   return (
