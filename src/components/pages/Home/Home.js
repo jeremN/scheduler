@@ -11,30 +11,42 @@ import clientWrapper from '../../../utilities/fetchWrapper';
 
 import './Home.scss';
 
-const initialState = {
-  firstname: '',
-  lastname: '',
-  email: '',
-  team: [],
-  plannings: [],
-};
-
-const Home = (props) => {
+const Home = () => {
   const { state } = useContext(AuthContext);
-  const [user, setUser] = useState(initialState);
+  const [user, setUser] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    team: [],
+    plannings: [],
+  });
+  const [requestState, setRequestState] = useState({
+    status: 'idle',
+    error: null,
+  });
 
   useEffect(() => {
-    clientWrapper(`user/${state.userId}`).then(async (result) => {
-      const datas = await result;
+    setRequestState({ status: 'pending' });
+    clientWrapper(`user/${state.userId}`)
+      .then(async (result) => {
+        const datas = await result;
 
-      if (!!datas.user) {
-        await setUser(datas.user);
-      }
-    });
+        if (!!datas.user) {
+          setUser(datas.user);
+          setRequestState({ status: 'fulfilled' });
+        } else {
+          setRequestState({ status: 'rejected', error: datas });
+        }
+      })
+      .finally(() => {
+        setRequestState({ status: 'idle' });
+      });
   }, [state.userId]);
 
-  const noPlanningDefault = <li>Vous n'avez pas créer de planning</li>;
-  const noTeamDefault = <li>Vous n'avez pas créer d'équipe</li>;
+  const wordingDefault = {
+    noPlanningDefault: "Vous n'avez pas créer de planning",
+    noTeamDefault: "Vous n'avez pas créer d'équipe",
+  };
 
   function addListLink(list, keyToAdd, defaultLink) {
     if (list.length) {
@@ -44,7 +56,7 @@ const Home = (props) => {
         </li>
       ));
     }
-    return defaultLink;
+    return <li>{wordingDefault[defaultLink]}</li>;
   }
 
   return (
@@ -77,7 +89,13 @@ const Home = (props) => {
             </ButtonLink>
           </CardHeading>
           <Card>
-            <ul>{addListLink(user.plannings, 'title', noPlanningDefault)}</ul>
+            <ul>
+              {requestState === 'pending' ? (
+                <li>Chargement...</li>
+              ) : (
+                addListLink(user.plannings, 'title', 'noPlanningDefault')
+              )}
+            </ul>
           </Card>
         </div>
       </div>
@@ -92,7 +110,13 @@ const Home = (props) => {
             </ButtonLink>
           </CardHeading>
           <Card>
-            <ul>{addListLink(user.team, 'name', noTeamDefault)}</ul>
+            <ul>
+              {requestState === 'pending' ? (
+                <li>Chargement...</li>
+              ) : (
+                addListLink(user.team, 'name', 'noTeamDefault')
+              )}
+            </ul>
           </Card>
         </div>
       </div>

@@ -1,6 +1,6 @@
 const _localStorageKey = '_scheduler_token';
 
-function clientWrapper (endpoint, { body, ...customConfig } = {}) {
+function clientWrapper(endpoint, { body, ...customConfig } = {}) {
   const token = localStorage.getItem(_localStorageKey);
   const headers = { 'Content-Type': 'application/json' };
 
@@ -15,22 +15,23 @@ function clientWrapper (endpoint, { body, ...customConfig } = {}) {
       ...headers,
       ...customConfig.headers,
     },
-  }
+  };
 
   if (!!body) {
     config.body = JSON.stringify(body);
   }
-  
-  return fetch(`${process.env.REACT_APP_API_ENDPOINT}/${endpoint}`, config)
-    .then(async response => {
-      const data = await response.json();
-      console.debug('fetchWrapper: ', response, data)
-      if (response.ok) {
-        return data;
-      } else {
-        return Promise.reject(data);
-      }
-    });
+
+  return fetch(
+    `${process.env.REACT_APP_API_ENDPOINT}/${endpoint}`,
+    config
+  ).then(async (response) => {
+    const data = await response.json();
+    if (response.ok) {
+      return data;
+    } else {
+      return Promise.reject(data);
+    }
+  });
 }
 
 export default clientWrapper;
