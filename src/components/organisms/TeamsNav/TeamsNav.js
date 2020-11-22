@@ -55,7 +55,7 @@ const TeamsNav = ({
         </Icon>
         créer un équipier
       </Buttons>
-      <Buttons clicked={filterTeamsFn}>
+      {/*<Buttons clicked={filterTeamsFn}>
         <Icon>
           <svg
             width="15"
@@ -70,7 +70,7 @@ const TeamsNav = ({
           </svg>
         </Icon>
         Filtrer
-      </Buttons>
+      </Buttons>*/}
     </div>
   </div>
 );

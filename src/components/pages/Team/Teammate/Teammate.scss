@@ -1,0 +1,125 @@
+@import "../../../helpers/helpers.scss";
+
+%teammateSmallTitle {
+  color: var(--downRiver);
+  font-size: 1.4rem;
+  margin-top: 0;
+}
+
+.teammate {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  grid-column-gap: 3rem;
+  grid-template-areas: "title title"
+                       "main other";
+  padding: 0 4.5rem 3rem;
+
+  .avatar {
+    font-size: 4.2rem;
+    line-height: 1.5;
+    color: var(--white);
+    background-color: var(--geyser);
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 80px;
+    margin-right: 18px;
+    margin-bottom: 3rem;
+  }
+
+  .card {
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__title {
+    grid-area: title;
+    display: flex;
+    align-items: center;
+
+    h2 {
+      margin-left: 1.2rem;
+    }
+  }
+
+  &__main {
+    grid-area: main;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__others {
+    grid-area: other;
+
+    h2 {
+      @extend %teammateSmallTitle;
+    }
+
+    textarea {
+      background-color: var(--polar);
+      border: 1px solid var(--athensGrey);
+      color: var(--black);
+      min-width: 100%;
+      max-width: 100%;
+      min-height: 24rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  &__infos {
+    width: 35%;
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  &__profil {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(65% - 1rem);
+    color: var(--regentGrey);
+
+    > * {
+      font-size: 1.4rem;
+      width: calc(100% / 3 - 2rem);
+      padding: 1.5rem 0;
+      margin: 0 1rem;
+      border-bottom: 1px dashed var(--geyser);
+    }
+
+    span {
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: var(--black);
+    }
+  }
+
+  &__name {
+    font-weight: bold;
+    font-size: 2.4rem;
+    color: var(--downRiver);
+    margin: 0 0 1rem 0;
+  }
+
+  &__email {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--regentGrey); 
+    margin: 0; 
+  }
+
+  &__plannings {
+    width: 100%;
+
+    h2 {
+      @extend %teammateSmallTitle;
+    }
+  }
+
+  &__notesList {
+    li {
+      border-top: 1px dashed var(--geyser);
+    }
+  }
+}

@@ -1,0 +1,48 @@
+@import '../../helpers/helpers.scss';
+
+
+.teammateNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.3rem 4.5rem ;
+  min-height: 6.8rem;
+  border-bottom: 2px solid var(--geyser);
+  background-color: var(--athensGrey);
+
+  &__leftBlock,
+  &__rightBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &__leftBlock {
+    > span {
+      display: flex;
+      font-weight: bold;
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+
+    > * {
+      align-items: center;
+      
+      &:not(:last-child) {
+        position: relative;
+
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: var(--curiousBlue);
+          margin-left: 6px;
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+
+}

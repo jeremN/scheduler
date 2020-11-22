@@ -16,7 +16,11 @@
 }
 
 .teams {
-  padding: 30px 45px;
+  padding: 3rem 3.5rem;
+
+  h2 {
+    margin-top: 0;
+  }
 
   &__listHead {
     @extend %listHeadStyles;
@@ -57,6 +61,36 @@
   &__listBody {
     display: flex;
     flex-direction: column;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1.5rem;
+
+    p {
+      color: var(--regentGrey);
+      font-size: 1.4rem;
+      font-weight: bold;
+      padding-right: 1rem;
+    }
+  }
+
+  &__filterLabel {
+    background-color: var(--white);
+    border: 1px solid var(--regentGrey);
+    border-radius: 6px;
+    padding: 5px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: 1.2rem;
+    margin: 0 1.2rem 0 0;
+
+    label {
+      margin-right: 8px;
+      margin-bottom: 0;
+    }
   }
 
   .card {

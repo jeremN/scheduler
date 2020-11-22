@@ -1,29 +1,26 @@
 import React from 'react';
 
-import {
-  formattedClasses,
-  formattedModifiers
-} from '../../../utilities/utilities';
+import { formattedModifiers } from '../../../utilities/utilities';
 
 import './Label.scss';
 
-const Label = ({ 
-  children, 
-  labelId, 
-  modifiers, 
-  classes, 
-  isRequired = false
+const Label = ({
+  children,
+  labelId,
+  modifiers = [],
+  classes = '',
+  isRequired = false,
 }) => {
-  const labelModifiers = formattedModifiers('form__label', modifiers);
-  const labelClasses = formattedClasses(classes);
-
   return (
-      <label 
-        htmlFor={ labelId } 
-        className={ `form__label ${labelModifiers} ${labelClasses}` }>
-        { children } {isRequired ? <small>(requis)</small> : '' }
-      </label>
+    <label
+      htmlFor={labelId}
+      className={`form__label ${formattedModifiers(
+        'form__label',
+        modifiers
+      )} ${classes}`}>
+      {children} {isRequired ? <small>(requis)</small> : ''}
+    </label>
   );
-}
+};
 
 export default Label;

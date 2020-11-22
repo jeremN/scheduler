@@ -1,22 +1,16 @@
 import React from 'react';
 
-import {
-  formattedClasses,
-  formattedModifiers
-} from '../../../utilities/utilities';
+import { formattedModifiers } from '../../../utilities/utilities';
 
 import './Icon.scss';
 
-const Icon = ({ children, tag = 'span', modifiers = null, classes = null }) => {
+const Icon = ({ children, tag = 'span', modifiers = null, classes = '' }) => {
   const IconTag = `${tag}`;
   const iconModifiers = formattedModifiers('icon', modifiers);
-  const iconClasses = formattedClasses(classes);
 
   return (
-    <IconTag className={ `icon ${iconModifiers} ${iconClasses}` }>
-      { children }
-    </IconTag>
+    <IconTag className={`icon ${iconModifiers} ${classes}`}>{children}</IconTag>
   );
-}
+};
 
 export default Icon;

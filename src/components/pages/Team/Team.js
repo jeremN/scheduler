@@ -1,124 +1,87 @@
 import React, { Fragment, useEffect, useReducer } from 'react';
 
+import Checkbox from '../../atoms/Checkbox/Checkbox';
+import FormGroup from '../../molecules/FormGroup/FormGroup';
 import TeamsNav from '../../organisms/TeamsNav/TeamsNav';
 import TeamMemberCard from '../../molecules/TeamMemberCard/TeamMemberCard';
-
-import {
-  SidebarFilters,
-  SidebarNewMember,
-  SidebarNewTeam,
-} from '../../organisms/TeamsSidebar/TeamsSidebar';
+import { SidebarFilters } from '../../organisms/TeamsSidebar/TeamsSidebar';
+import SidebarNewMember from '../../organisms/TeamsSidebar/SidebarNewMember';
+import SidebarNewTeam from '../../organisms/TeamsSidebar/SidebarNewTeam';
 
 import clientWrapper from '../../../utilities/fetchWrapper';
 
 import './Team.scss';
 
-const Team = (props) => {
-  const initialTeamState = {
-    teamList: [],
-    filters: {
-      teamName: [],
-      poste: [],
-      contract: [],
-    },
-    sidebarState: 'hidden',
-    sidebarType: 'default',
-    newMemberForm: [
-      {
-        firstname: '',
-        lastname: '',
-        contract: '',
-        hours: '',
-        poste: '',
-        email: '',
-        teamID: '',
-      },
-    ],
-    newTeam: {
-      name: '',
-      location: {
-        city: '',
-        address: '',
-      },
-      members: [
-        {
-          firstname: '',
-          lastname: '',
-          contract: '',
-          hours: '',
-          poste: '',
-          email: '',
+const initialTeamState = {
+  teamList: [],
+  filters: {
+    teamName: [],
+    poste: ['vendeur', 'Responsable adjoint', 'Responsable'],
+    contract: ['CDD', 'CDI', 'Freelance', 'Saisonnier'],
+  },
+  activeFilters: [],
+  sidebarState: 'hidden',
+  sidebarType: 'default',
+};
+
+const actionTypes = {
+  setTeamList: 'SET_TEAM_LIST',
+  setSidebarState: 'SET_SIDEBAR_STATE',
+  setFilters: 'SET_FILTERS',
+  setActiveFilters: 'SET_ACTIVE_FILTERS',
+  setTeamsNames: 'SET_TEAMS_NAMES',
+  clearSidebarState: 'CLEAR_SIDEBAR_STATE',
+};
+
+const teamReducer = (currentState, action) => {
+  switch (action.type) {
+    case actionTypes.setTeamList:
+      return {
+        ...currentState,
+        teamList: action.payload,
+      };
+    case actionTypes.setSidebarState:
+      return {
+        ...currentState,
+        sidebarState: action.payload.showSidebar,
+        sidebarType: action.payload.type,
+      };
+    case actionTypes.setFilters:
+      return {
+        ...currentState,
+        filters: {
+          ...currentState.filters,
+          teamName: [...action.payload],
         },
-      ],
-    },
-  };
+      };
+    case actionTypes.setActiveFilters:
+      return {
+        ...currentState,
+        activeFilters: [...action.payload],
+      };
+    case actionTypes.clearSidebarState:
+      return {
+        ...currentState,
+        sidebarState: 'hidden',
+        sidebarType: 'default',
+      };
+    default:
+      return currentState;
+  }
+};
 
-  const teamReducer = (currentState, action) => {
-    switch (action.type) {
-      case 'SET_TEAM_LIST':
-        return {
-          ...currentState,
-          teamList: action.payload,
-        };
-      case 'SET_SIDEBAR_STATE':
-        return {
-          ...currentState,
-          sidebarState: action.payload.showSidebar,
-          sidebarType: action.payload.type,
-        };
-      case 'SET_FILTERS':
-        return {
-          ...currentState,
-          filters: action.payload,
-        };
-      case 'CLEAR_MEMBER_STATE':
-        return {
-          ...currentState,
-          sidebarState: 'hidden',
-          sidebarType: 'default',
-          newMemberForm: [
-            {
-              firstname: '',
-              lastname: '',
-              teamID: '',
-            },
-          ],
-        };
-      case 'SET_MEMBER_STATE':
-        return {
-          ...currentState,
-          newMemberForm: action.payload,
-        };
-      case 'CLEAR_TEAM_FORM':
-        return {
-          ...currentState,
-          sidebarState: 'hidden',
-          sidebarType: 'default',
-          newTeam: {
-            name: '',
-            location: {
-              city: '',
-              address: '',
-            },
-            members: [
-              {
-                firstname: '',
-                lastname: '',
-              },
-            ],
-          },
-        };
-      case 'SET_TEAM_FORM':
-        return {
-          ...currentState,
-          newTeam: action.payload,
-        };
-      default:
-        return currentState;
-    }
-  };
-
+const Team = (props) => {
   const [teamState, setTeamState] = useReducer(teamReducer, initialTeamState);
+
+  function setTeamsOptions(teamsArray = []) {
+    return teamsArray.reduce((currentItem, nextItem) => {
+      currentItem.push({
+        value: nextItem._id,
+        wording: nextItem.name,
+      });
+      return currentItem;
+    }, []);
+  }
 
   useEffect(() => {
     let mounted = true;
@@ -127,172 +90,55 @@ const Team = (props) => {
       const datas = await result;
 
       if (!!datas.teamsList && mounted) {
-        console.debug('teamsArray', datas.teamsList);
-        setTeamState({ type: 'SET_TEAM_LIST', payload: datas.teamsList });
+        setTeamState({
+          type: actionTypes.setTeamList,
+          payload: datas.teamsList,
+        });
       }
     });
-
     return function cleanup() {
       mounted = false;
     };
   }, []);
 
   useEffect(() => {
-    const optionsKeys = ['teamName', 'poste', 'contract'];
-
-    function extractFiltersOptions(keysToFind, listToSort) {
-      const baseObj = {
-        teamName: [],
-        poste: [],
-        contract: [],
-      };
-      return listToSort.reduce((item, nextItem) => {
-        Object.keys(nextItem).forEach((key) => {
-          if (keysToFind.includes(key) && !item[key].includes(nextItem[key])) {
-            item[key].push(nextItem[key]);
-          }
-        });
-        return item;
-      }, baseObj);
-    }
-
-    if (teamState.teamList.length) {
-      const options = extractFiltersOptions(optionsKeys, teamState.teamList);
-      console.debug('options', options);
-      setTeamState({ type: 'SET_FILTERS', payload: options });
-    }
+    const options = setTeamsOptions(teamState.teamList);
+    setTeamState({
+      type: actionTypes.setFilters,
+      payload: options,
+    });
+    setTeamState({
+      type: actionTypes.setActiveFilters,
+      payload: options.map((team) => team.wording),
+    });
   }, [teamState.teamList]);
 
   function setSidebarStateType(newType) {
+    const isSidebarHiddenOrAlreadyVisible =
+      teamState.sidebarState === 'hidden' ||
+      (teamState.sidebarState === 'show' && teamState.sidebarType !== newType);
     setTeamState({
-      type: 'SET_SIDEBAR_STATE',
+      type: actionTypes.setSidebarState,
       payload: {
-        showSidebar: teamState.sidebarState === 'hidden' ? 'show' : 'hidden',
+        showSidebar: isSidebarHiddenOrAlreadyVisible ? 'show' : 'hidden',
         type: newType,
       },
     });
-  }
-
-  const callSidebarFilters = () => {
-    setSidebarStateType('filters');
-  };
-  const callSidebarMember = () => {
-    setSidebarStateType('member');
-  };
-  const callSidebarTeam = () => {
-    setSidebarStateType('team');
-  };
-
-  const handleNewMemberChange = (evt, field = null, val = null) => {
-    const memberIndex = evt.target.closest('.teamMember').dataset.memberIndex;
-    const updatedMemberForm = [...teamState.newMemberForm];
-    const fieldName = field ? field : evt.target.name;
-    const fieldValue = val ? val : evt.target.value;
-
-    updatedMemberForm[memberIndex][fieldName] = fieldValue;
-    setTeamState({ type: 'SET_MEMBER_STATE', payload: updatedMemberForm });
-  };
-
-  const handleNewMemberSubmit = (e) => {
-    e.preventDefault();
-  };
-
-  const handleNewTeamChange = (evt, field = null, val = null) => {
-    const updatedTeamForm = { ...teamState.newTeam };
-    const isLocation = ['city', 'address'];
-    const isMember = [
-      'firstname',
-      'lastname',
-      'contract',
-      'hours',
-      'poste',
-      'email',
-    ];
-
-    const fieldName = field ? field : evt.target.name;
-    const fieldValue = val ? val : evt.target.value;
-
-    if (isLocation.includes(fieldName)) {
-      updatedTeamForm.location = { ...teamState.newTeam.location };
-      updatedTeamForm.location[fieldName] = fieldValue;
-    } else if (isMember.includes(fieldName)) {
-      const memberIndex = evt.target.closest('.teamMember').dataset.memberIndex;
-      updatedTeamForm.members = [...teamState.newTeam.members];
-      updatedTeamForm.members[memberIndex][fieldName] = fieldValue;
-    } else {
-      updatedTeamForm[fieldName] = fieldValue;
-    }
-
-    setTeamState({ type: 'SET_TEAM_FORM', payload: updatedTeamForm });
-  };
-
-  const handleNewTeamSubmit = (e) => {
-    e.preventDefault();
-
-    clientWrapper(`teams/newTeam`, {
-      body: { newTeam: { ...teamState.newTeam } },
-    })
-      .then(async (result) => {
-        const datas = await result;
-
-        if (datas.newTeamID) {
-          setTeamState({ type: 'SET_TEAM_LIST', payload: datas.teamsList });
-        } else {
-          throw new Error(
-            'An error occured while trying to create your team, please try again'
-          );
-        }
-      })
-      .finally(() => {
-        setTeamState({ type: 'CLEAR_TEAM_FORM' });
-      });
-  };
-
-  function addNewMemberToMemberForm() {
-    const updatedForm = [
-      ...teamState.memberForm,
-      {
-        firstname: '',
-        lastname: '',
-        contract: '',
-        hours: '',
-        poste: '',
-        email: '',
-        teamID: '',
-      },
-    ];
-    setTeamState({ type: 'SET_MEMBER_STATE', payload: updatedForm });
-  }
-
-  function addNewMemberToTeamForm() {
-    const updatedForm = {
-      ...teamState.newTeam,
-      members: [
-        ...teamState.newTeam.members,
-        {
-          firstname: '',
-          lastname: '',
-          contract: '',
-          hours: '',
-          poste: '',
-          email: '',
-        },
-      ],
-    };
-    setTeamState({ type: 'SET_TEAM_FORM', payload: updatedForm });
   }
 
   function toggleSidebar(type = 'default') {
     const types = {
       member: (
         <SidebarNewMember
-          memberForm={teamState.newMemberForm}
-          handlesFn={{
-            submit: handleNewMemberSubmit,
-            change: handleNewMemberChange,
-            addMember: addNewMemberToMemberForm,
-          }}
           teamsOptions={teamState.filters.teamName}
+          onSubmitFns={{
+            success: (datas) => {
+              setTeamState({ type: actionTypes.setTeamList, payload: datas });
+            },
+            clear: () => {
+              setTeamState({ type: actionTypes.clearSidebarState });
+            },
+          }}
         />
       ),
       filters: (
@@ -303,13 +149,14 @@ const Team = (props) => {
       ),
       team: (
         <SidebarNewTeam
-          teamForm={teamState.newTeam}
-          handlesFn={{
-            submit: handleNewTeamSubmit,
-            change: handleNewTeamChange,
-            addMember: addNewMemberToTeamForm,
+          onSubmitFns={{
+            success: (datas) => {
+              setTeamState({ type: actionTypes.setTeamList, payload: datas });
+            },
+            clear: () => {
+              setTeamState({ type: actionTypes.clearSidebarState });
+            },
           }}
-          teamsOptions={teamState.filters.teamName}
         />
       ),
       default: null,
@@ -318,24 +165,23 @@ const Team = (props) => {
     return types[type];
   }
 
-  const Teams = ({ children }) => (
-    <div className="teams">
-      <h2>Mes équipes</h2>
-      <div className="teams__list">
-        <ul className="teams__listHead">
-          <li>Informations</li>
-          <li>Poste</li>
-          <li>Contrat</li>
-          <li>Nombre d'heures</li>
-          <li>Equipe</li>
-          <li>Magasin</li>
-          <li>Notes</li>
-          <li>Actions</li>
-        </ul>
-        <ul className="teams__listBody">{children}</ul>
-      </div>
-    </div>
-  );
+  const onFiltersChangeHandler = (evt) => {
+    const nameToFind = evt.target.name;
+    const isActive = teamState.activeFilters.includes(nameToFind);
+    let updatedFilters = [...teamState.activeFilters];
+
+    if (isActive) {
+      updatedFilters = [...teamState.activeFilters].filter(
+        (name) => name !== nameToFind
+      );
+    } else {
+      updatedFilters.push(nameToFind);
+    }
+    setTeamState({
+      type: actionTypes.setActiveFilters,
+      payload: updatedFilters,
+    });
+  };
 
   const getMembersLength = () => {
     let countMembers = 0;
@@ -346,45 +192,81 @@ const Team = (props) => {
     return countMembers;
   };
 
+  const TeamsNamesFilters = () =>
+    teamState.filters.teamName.map(({ value, wording }) => (
+      <FormGroup
+        key={`teamFilter_${value}`}
+        labelId={`activeTeam__${value}`}
+        classes="teams__filterLabel"
+        wording={wording}>
+        <Checkbox
+          id={`activeTeam__${value}`}
+          name={wording}
+          type={'checkbox'}
+          checked={teamState.activeFilters.includes(wording)}
+          onChangeFn={onFiltersChangeHandler}
+        />
+      </FormGroup>
+    ));
+
+  const TeamsMembersList = () =>
+    teamState.teamList.map(({ _id: teamId, name, members, location }) => {
+      if (teamState.activeFilters.includes(name)) {
+        return members.map(
+          ({ _id, firstname, lastname, email, hours, poste, contract }) => (
+            <TeamMemberCard
+              key={_id}
+              member={{
+                _id,
+                email,
+                hours,
+                poste,
+                contract,
+                teamId,
+                shop: location.city || '',
+                teamName: name,
+                name: `${firstname} ${lastname}`,
+              }}
+            />
+          )
+        );
+      } else {
+        return null;
+      }
+    });
+
+  const Teams = ({ children }) => (
+    <div className="teams">
+      <h2>Mes équipes</h2>
+      <div className="teams__filters">
+        <p>Afficher: </p>
+        {TeamsNamesFilters()}
+      </div>
+      <div className="teams__list">
+        <ul className="teams__listHead">
+          <li>Informations</li>
+          <li>Poste</li>
+          <li>Contrat</li>
+          <li>Nombre d'heures</li>
+          <li>Equipe</li>
+          <li>Magasin</li>
+          <li>Lien vers la fiche</li>
+          <li>Actions</li>
+        </ul>
+        <ul className="teams__listBody">{children}</ul>
+      </div>
+    </div>
+  );
+
   return (
     <Fragment>
       <TeamsNav
         teamsMembersLength={[teamState.teamList.length, getMembersLength()]}
-        filterTeamsFn={callSidebarFilters}
-        addNewTeamMemberFn={callSidebarMember}
-        createTeamFn={callSidebarTeam}
+        filterTeamsFn={() => setSidebarStateType('filters')}
+        addNewTeamMemberFn={() => setSidebarStateType('member')}
+        createTeamFn={() => setSidebarStateType('team')}
       />
-      <Teams>
-        {teamState.teamList.map(({ name, members, location }) => {
-          return members.map(
-            ({
-              _id,
-              firstname,
-              lastname,
-              email,
-              hours,
-              notes,
-              poste,
-              contract,
-            }) => (
-              <TeamMemberCard
-                key={_id}
-                member={{
-                  _id,
-                  email,
-                  hours,
-                  poste,
-                  contract,
-                  shop: location.city || '',
-                  teamName: name,
-                  name: `${firstname} ${lastname}`,
-                  note: notes[0],
-                }}
-              />
-            )
-          );
-        })}
-      </Teams>
+      <Teams>{TeamsMembersList()}</Teams>
       {teamState.sidebarState === 'show'
         ? toggleSidebar(teamState.sidebarType)
         : null}

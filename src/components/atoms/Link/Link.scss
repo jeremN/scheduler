@@ -20,49 +20,51 @@
     background-color: var(--geyser);
     color: var(--jordyBlue);
   }
+
+  &.button {
+    &--simple {
+      padding: 10px 0;
+      background: none;
+      border: 0;
   
-  &--simple {
-    padding: 10px 0;
-    background: none;
-    border: 0;
-
-    &:hover {
-      color: var(--downRiver);
+      &:hover {
+        color: var(--downRiver);
+      }
+  
+      &:active {
+        color: var(--jordyBlue);
+      }
     }
-
-    &:active {
-      color: var(--jordyBlue);
+  
+    &--disabled {
+      background: transparent;
+      color: var(--regentGrey);
+  
+      &:hover {
+        background-color: var(--geyser);
+      }
+  
+      &:active {
+        background-color: var(--athensGrey);
+      }
     }
-  }
-
-  &--disabled {
-    background: transparent;
-    color: var(--regentGrey);
-
-    &:hover {
-      background-color: var(--geyser);
-    }
-
-    &:active {
-      background-color: var(--athensGrey);
-    }
-  }
-
-  &--primary {
-    background-color: var(--curiousBlue);
-    color: var(--white);
-    border-color: var(--curiousBlue);
-
-    &:hover {
-      background-color: var(--bluemine);
+  
+    &--primary {
+      background-color: var(--curiousBlue);
       color: var(--white);
-      border-color: var(--bluemine);
-    }
-
-    &:active {
-      background-color: var(--jordyBlue);
-      color: var(--white);
-      border-color: var(--jordyBlue); 
+      border-color: var(--curiousBlue);
+  
+      &:hover {
+        background-color: var(--bluemine);
+        color: var(--white);
+        border-color: var(--bluemine);
+      }
+  
+      &:active {
+        background-color: var(--jordyBlue);
+        color: var(--white);
+        border-color: var(--jordyBlue); 
+      }
     }
   }
 

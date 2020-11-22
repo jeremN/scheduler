@@ -1,6 +1,7 @@
 import Landing from '../components/pages/Landing/Landing';
 import Home from '../components/pages/Home/Home';
 import Team from '../components/pages/Team/Team';
+import Teammate from '../components/pages/Team/Teammate/Teammate';
 import Plannings from '../components/pages/Plannings/Plannings';
 import EditPlanning from '../components/pages/Plannings/Edit/Edit';
 import Settings from '../components/pages/Settings/Settings';
@@ -29,8 +30,8 @@ const routes = [
     exact: true,
   },
   {
-    path: '/team/:id',
-    components: Team,
+    path: '/team/:id/:memberId',
+    components: Teammate,
     display: 'isAuth',
     exact: true,
   },

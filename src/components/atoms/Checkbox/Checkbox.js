@@ -2,15 +2,15 @@ import React from 'react';
 
 import { formattedModifiers } from '../../../utilities/utilities';
 
-import './Input.scss';
+import './Checkbox.scss';
 
-const Input = ({
+const Checkbox = ({
   id,
   type = 'text',
   classes = '',
   modifiers = [],
   name = '',
-  value = '',
+  checked = '',
   onChangeFn = null,
   ...props
 }) => {
@@ -23,11 +23,11 @@ const Input = ({
       )} ${classes}`}
       type={type}
       name={name ? name : id}
-      value={value}
+      checked={checked}
       onChange={onChangeFn}
       {...props}
     />
   );
 };
 
-export default Input;
+export default Checkbox;
