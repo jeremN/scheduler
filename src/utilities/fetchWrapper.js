@@ -29,7 +29,10 @@ function clientWrapper(endpoint, { body, ...customConfig } = {}) {
     if (response.ok) {
       return data;
     } else {
-      return Promise.reject(data);
+      return Promise.reject({
+        ...data,
+        status: response.status,
+      });
     }
   });
 }

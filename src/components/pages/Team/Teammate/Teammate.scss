@@ -46,13 +46,18 @@
     grid-area: main;
     display: flex;
     flex-wrap: wrap;
+    height: fit-content;
   }
 
   &__others {
     grid-area: other;
 
-    h2 {
+    h2, h3 {
       @extend %teammateSmallTitle;
+    }
+
+    h3 {
+      padding-top: 5rem;
     }
 
     textarea {
@@ -72,6 +77,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 26rem;
   }
   
   &__profil {
@@ -79,6 +85,7 @@
     flex-wrap: wrap;
     width: calc(65% - 1rem);
     color: var(--regentGrey);
+    min-height: 26rem;
 
     > * {
       font-size: 1.4rem;
@@ -119,7 +126,45 @@
 
   &__notesList {
     li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
       border-top: 1px dashed var(--geyser);
+
+      span {
+        background-color: var(--geyser);
+        max-width: 80%;
+        white-space: pre-wrap;
+        padding: 0.5rem
+      }
     }
+  }
+
+  &__edit {   
+    background: none;
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 0 2rem;
+  }
+  
+  &__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-basis: 100%;
+
+    button {
+      &:first-of-type {
+        margin-right: 2rem;
+      }
+    }
+  }
+
+  &__form {
+    margin-bottom: 5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 }
