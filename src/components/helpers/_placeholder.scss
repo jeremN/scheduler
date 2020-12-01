@@ -76,5 +76,20 @@
 }
 
 %teamCellWidthItem {
-  flex-basis: calc((100% - 240px - 320px - 50px) / 5);
+  flex-basis: calc((100% - 240px - 320px ) / 6);
+}
+
+%ellipsis {
+  display: -webkit-box;
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+}
+
+%listHeadStyles {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  color: var(--regentGrey);
 }

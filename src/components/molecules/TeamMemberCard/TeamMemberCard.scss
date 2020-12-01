@@ -52,6 +52,7 @@
   }
 
   &__actions {
-    flex-basis: 5rem;
+    @extend %F14Lh12B;
+    @extend %teamCellWidthItem;
   }
 }

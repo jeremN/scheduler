@@ -30,11 +30,13 @@ const defaultState = {
 
 export default function SidebarNewMember({
   onSubmitFns = {
+    beforeSend: () => {},
     clear: () => {},
     success: () => {},
     failed: () => {},
   },
   teamsOptions = [],
+  teams = [],
 }) {
   const [formState, setFormState] = useState(defaultState);
 
@@ -80,8 +82,20 @@ export default function SidebarNewMember({
   const handleNewMemberSubmit = (e) => {
     e.preventDefault();
 
+    if (formState.selectedTeam === '') return;
+
+    const teamToUpdate = [...teams].filter(
+      (team) => team._id === formState.selectedTeam
+    );
+
     clientWrapper(`teams/updateTeam/${formState.selectedTeam}`, {
-      body: { updatedTeam: [...formState.members] },
+      body: {
+        updatedTeam: {
+          ...teamToUpdate[0],
+          members: [...teamToUpdate[0].members, ...formState.members],
+        },
+      },
+      method: 'PUT',
     })
       .then(async (result) => {
         const datas = await result;
@@ -121,7 +135,10 @@ export default function SidebarNewMember({
               id={`memberTeam`}
               name={'team'}
               value={formState.selectedTeam}
-              optionsArray={teamsOptions}
+              optionsArray={[
+                { wording: 'choisir une équipe', value: '' },
+                ...teamsOptions,
+              ]}
               onChangeFn={handleSelectedTeamChange}
             />
           </FormGroup>

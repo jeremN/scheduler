@@ -1,0 +1,45 @@
+@import "../../helpers/helpers.scss";
+
+.teams {
+  &__listHead {
+    @extend %listHeadStyles;
+    display: flex;
+    padding: 0 20px;
+
+    li {
+      @extend %ellipsis;
+      text-align: left;
+
+      &:first-child {
+        flex-basis: 320px;
+      }
+      &:nth-child(2) {
+        flex-basis: 240px;
+      }
+      &:nth-child(3) {
+        @extend %teamCellWidthItem;
+      }
+      &:nth-child(4) {
+        @extend %teamCellWidthItem;
+      }
+      &:nth-child(5) {
+        @extend %teamCellWidthItem;
+      }
+      &:nth-child(6) {
+        @extend %teamCellWidthItem;
+      }
+      &:nth-child(7) {
+        @extend %teamCellWidthItem;
+      }
+      &:last-child {
+        @extend %teamCellWidthItem;
+      }
+    }
+  }
+
+  &__listBody {
+    display: flex;
+    flex-direction: column;
+  }
+
+}

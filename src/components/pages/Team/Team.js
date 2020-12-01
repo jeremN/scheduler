@@ -3,8 +3,7 @@ import React, { Fragment, useEffect, useReducer } from 'react';
 import Checkbox from '../../atoms/Checkbox/Checkbox';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 import TeamsNav from '../../organisms/TeamsNav/TeamsNav';
-import TeamMemberCard from '../../molecules/TeamMemberCard/TeamMemberCard';
-import { SidebarFilters } from '../../organisms/TeamsSidebar/TeamsSidebar';
+import TeamsMembersList from '../../organisms/TeamMembersList/TeamMembersList';
 import SidebarNewMember from '../../organisms/TeamsSidebar/SidebarNewMember';
 import SidebarNewTeam from '../../organisms/TeamsSidebar/SidebarNewTeam';
 
@@ -131,20 +130,24 @@ const Team = (props) => {
       member: (
         <SidebarNewMember
           teamsOptions={teamState.filters.teamName}
+          teams={[...teamState.teamList]}
           onSubmitFns={{
-            success: (datas) => {
-              setTeamState({ type: actionTypes.setTeamList, payload: datas });
+            success: ({ _id: teamId, members }) => {
+              const updatedTeams = teamState.teamList.map((team) => {
+                if (teamId === team._id) {
+                  team.members = members;
+                }
+                return team;
+              });
+              setTeamState({
+                type: actionTypes.setTeamList,
+                payload: updatedTeams,
+              });
             },
             clear: () => {
               setTeamState({ type: actionTypes.clearSidebarState });
             },
           }}
-        />
-      ),
-      filters: (
-        <SidebarFilters
-          teamsNames={teamState.filters.teamName}
-          postes={teamState.filters.postes}
         />
       ),
       team: (
@@ -192,70 +195,24 @@ const Team = (props) => {
     return countMembers;
   };
 
-  const TeamsNamesFilters = () =>
-    teamState.filters.teamName.map(({ value, wording }) => (
-      <FormGroup
-        key={`teamFilter_${value}`}
-        labelId={`activeTeam__${value}`}
-        classes="teams__filterLabel"
-        wording={wording}>
-        <Checkbox
-          id={`activeTeam__${value}`}
-          name={wording}
-          type={'checkbox'}
-          checked={teamState.activeFilters.includes(wording)}
-          onChangeFn={onFiltersChangeHandler}
-        />
-      </FormGroup>
-    ));
-
-  const TeamsMembersList = () =>
-    teamState.teamList.map(({ _id: teamId, name, members, location }) => {
-      if (teamState.activeFilters.includes(name)) {
-        return members.map(
-          ({ _id, firstname, lastname, email, hours, poste, contract }) => (
-            <TeamMemberCard
-              key={_id}
-              member={{
-                _id,
-                email,
-                hours,
-                poste,
-                contract,
-                teamId,
-                shop: location.city || '',
-                teamName: name,
-                name: `${firstname} ${lastname}`,
-              }}
-            />
-          )
-        );
-      } else {
-        return null;
-      }
-    });
-
-  const Teams = ({ children }) => (
-    <div className="teams">
-      <h2>Mes équipes</h2>
-      <div className="teams__filters">
-        <p>Afficher: </p>
-        {TeamsNamesFilters()}
-      </div>
-      <div className="teams__list">
-        <ul className="teams__listHead">
-          <li>Informations</li>
-          <li>Poste</li>
-          <li>Contrat</li>
-          <li>Nombre d'heures</li>
-          <li>Equipe</li>
-          <li>Magasin</li>
-          <li>Lien vers la fiche</li>
-          <li>Actions</li>
-        </ul>
-        <ul className="teams__listBody">{children}</ul>
-      </div>
-    </div>
+  const TeamsNamesFilters = () => (
+    <Fragment>
+      {teamState.filters.teamName.map(({ value, wording }) => (
+        <FormGroup
+          key={`teamFilter_${value}`}
+          labelId={`activeTeam__${value}`}
+          classes="teams__filterLabel"
+          wording={wording}>
+          <Checkbox
+            id={`activeTeam__${value}`}
+            name={wording}
+            type={'checkbox'}
+            checked={teamState.activeFilters.includes(wording)}
+            onChangeFn={onFiltersChangeHandler}
+          />
+        </FormGroup>
+      ))}
+    </Fragment>
   );
 
   return (
@@ -266,7 +223,23 @@ const Team = (props) => {
         addNewTeamMemberFn={() => setSidebarStateType('member')}
         createTeamFn={() => setSidebarStateType('team')}
       />
-      <Teams>{TeamsMembersList()}</Teams>
+      <div className="teams">
+        <h2>Mes équipes</h2>
+        <div className="teams__filters">
+          <p>Afficher: </p>
+          <TeamsNamesFilters />
+        </div>
+
+        <TeamsMembersList
+          teamList={teamState.teamList}
+          activeFilters={teamState.activeFilters}
+          onDeleteFns={{
+            success: (datas) => {
+              setTeamState({ type: actionTypes.setTeamList, payload: datas });
+            },
+          }}
+        />
+      </div>
       {teamState.sidebarState === 'show'
         ? toggleSidebar(teamState.sidebarType)
         : null}

@@ -3,10 +3,13 @@ import React from 'react';
 import Card from '../../atoms/Card/Card';
 import Avatar from '../../atoms/Avatar/Avatar';
 import ButtonLink from '../../atoms/Link/Link';
+import Button from '../../atoms/Buttons/Buttons';
+
+import clientWrapper from '../../../utilities/fetchWrapper';
 
 import './TeamMemberCard.scss';
 
-const TeamMemberCard = ({ member, onClickHandler = () => {} }, index) => (
+const TeamMemberCard = ({ member, onDeleteMember }, index) => (
   <Card tag={'li'} classes={['member']}>
     <div className="member__infos">
       <Avatar letter={member.name.charAt(0)} />
@@ -27,23 +30,7 @@ const TeamMemberCard = ({ member, onClickHandler = () => {} }, index) => (
       </ButtonLink>
     </div>
     <div className="member__actions">
-      <svg
-        width="31"
-        height="6"
-        viewBox="0 0 31 6"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#clip0)">
-          <circle cx="3.96118" cy="3" r="3" fill="#2B3858" />
-          <circle cx="15.9612" cy="3" r="3" fill="#2B3858" />
-          <circle cx="27.9612" cy="3" r="3" fill="#2B3858" />
-        </g>
-        <defs>
-          <clipPath id="clip0">
-            <rect x="0.961182" width="30" height="6" fill="white" />
-          </clipPath>
-        </defs>
-      </svg>
+      <Button clicked={onDeleteMember}>Effacer</Button>
     </div>
   </Card>
 );
