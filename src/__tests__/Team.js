@@ -73,7 +73,7 @@ test('Team: should display a list of teammate', async () => {
     teamsList: testDatas,
   });
 
-  await render(
+  render(
     <RenderWithAuthContextAndRouter
       isAuthenticated={true}
       state={{

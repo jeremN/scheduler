@@ -33,7 +33,6 @@ const TeamMembersList = ({
           }
           return team;
         });
-        console.debug(teamToUpdate);
         onDeleteFns.success(teamToUpdate);
       } else {
         onDeleteFns.failed();

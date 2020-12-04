@@ -5,8 +5,6 @@ import Avatar from '../../atoms/Avatar/Avatar';
 import ButtonLink from '../../atoms/Link/Link';
 import Button from '../../atoms/Buttons/Buttons';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
-
 import './TeamMemberCard.scss';
 
 const TeamMemberCard = ({ member, onDeleteMember }, index) => (

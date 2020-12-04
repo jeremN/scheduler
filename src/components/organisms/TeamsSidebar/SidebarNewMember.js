@@ -99,7 +99,6 @@ export default function SidebarNewMember({
     })
       .then(async (result) => {
         const datas = await result;
-
         if (datas.team) {
           // eslint-disable-next-line no-unused-expressions
           onSubmitFns?.success(datas.team);
