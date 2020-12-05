@@ -33,7 +33,6 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
           // eslint-disable-next-line no-unused-expressions
           onSubmitFn?.success(editProfil);
         }
-        console.debug(datas);
       })
       .finally(() => {
         // eslint-disable-next-line no-unused-expressions
