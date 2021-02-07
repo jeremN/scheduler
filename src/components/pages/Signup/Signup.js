@@ -1,59 +1,27 @@
-import React, { Fragment, useReducer } from 'react';
+import React, { Fragment } from 'react';
 
 import Button from '../../atoms/Buttons/Buttons';
-import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 import ButtonLink from '../../atoms/Link/Link';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useAuth } from '../../../context/authContext';
 
 import './Signup.scss';
 
-const Signup = (props) => {
-  const signupState = {
-    email: '',
-    firstname: '',
-    lastname: '',
-    password: '',
-  };
-
-  const signupReducer = (state, { field, value }) => {
-    return {
-      ...state,
-      [field]: value,
-    };
-  };
-
-  const [state, setState] = useReducer(signupReducer, signupState);
-
-  const handleChange = (e, field = null, val = null) => {
-    setState({
-      field: field ? field : e.target.name,
-      value: val ? val : e.target.value,
-    });
-  };
+const Signup = () => {
+  const { register } = useAuth();
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+    const { email, firstname, lastname, password } = evt.target.elements;
 
-    await clientWrapper('auth/signup', { body: { ...state } }).then(
-      (result) => {
-        if (result.status && result.status === 422) {
-          throw new Error('Validation failed');
-        }
-
-        if (result.status && result.status !== 201) {
-          throw new Error('Could not authenticate you');
-        }
-
-        if (!!result.userID) {
-          props.history.push('/signin');
-        }
-      }
-    );
+    await register({
+      email: email.value,
+      password: password.value,
+      firstname: firstname.value,
+      lastname: lastname.value,
+    });
   };
-
-  const { email, firstname, lastname, password } = state;
 
   return (
     <Fragment>
@@ -66,12 +34,11 @@ const Signup = (props) => {
               wording="Prénom"
               isRequired={true}
               modifiers={['column']}>
-              <Input
+              <input
                 id="userFirstname"
+                className="form__field"
                 type="text"
                 name="firstname"
-                value={firstname}
-                onChangeFn={handleChange}
               />
             </FormGroup>
             <FormGroup
@@ -79,12 +46,11 @@ const Signup = (props) => {
               wording="Nom"
               isRequired={true}
               modifiers={['column']}>
-              <Input
+              <input
                 id="userLastname"
                 type="text"
                 name="lastname"
-                value={lastname}
-                onChangeFn={handleChange}
+                className="form__field"
               />
             </FormGroup>
           </div>
@@ -93,12 +59,11 @@ const Signup = (props) => {
             wording="Email"
             isRequired={true}
             modifiers={['column']}>
-            <Input
+            <input
               id="userEmail"
               type="email"
               name="email"
-              value={email}
-              onChangeFn={handleChange}
+              className="form__field"
             />
           </FormGroup>
           <FormGroup
@@ -106,12 +71,11 @@ const Signup = (props) => {
             wording="Mot de passe"
             isRequired={true}
             modifiers={['column']}>
-            <Input
+            <input
               id="userPassword"
               type="password"
               name="password"
-              value={password}
-              onChangeFn={handleChange}
+              className="form__field"
             />
           </FormGroup>
           <Button modifiers={['primary']} type="submit">

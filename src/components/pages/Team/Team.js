@@ -7,7 +7,8 @@ import TeamsMembersList from '../../organisms/TeamMembersList/TeamMembersList';
 import SidebarNewMember from '../../organisms/TeamsSidebar/SidebarNewMember';
 import SidebarNewTeam from '../../organisms/TeamsSidebar/SidebarNewTeam';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
+import { useAsync } from '../../../hooks/useAsync';
 
 import './Team.scss';
 
@@ -69,7 +70,10 @@ const teamReducer = (currentState, action) => {
   }
 };
 
-const Team = (props) => {
+const Team = () => {
+  const client = useClient();
+  const { isLoading, isSuccess, isError, error, run } = useAsync();
+
   const [teamState, setTeamState] = useReducer(teamReducer, initialTeamState);
 
   function setTeamsOptions(teamsArray = []) {
@@ -84,21 +88,22 @@ const Team = (props) => {
 
   useEffect(() => {
     let mounted = true;
+    run(
+      client(`teams/teamsList`).then(async (result) => {
+        const datas = await result;
 
-    clientWrapper(`teams/teamsList`).then(async (result) => {
-      const datas = await result;
-
-      if (!!datas.teamsList && mounted) {
-        setTeamState({
-          type: actionTypes.setTeamList,
-          payload: datas.teamsList,
-        });
-      }
-    });
+        if (!!datas.teamsList && mounted) {
+          setTeamState({
+            type: actionTypes.setTeamList,
+            payload: datas.teamsList,
+          });
+        }
+      })
+    );
     return function cleanup() {
       mounted = false;
     };
-  }, []);
+  }, [client, run]);
 
   useEffect(() => {
     const options = setTeamsOptions(teamState.teamList);
@@ -229,16 +234,19 @@ const Team = (props) => {
           <p>Afficher: </p>
           <TeamsNamesFilters />
         </div>
-
-        <TeamsMembersList
-          teamList={teamState.teamList}
-          activeFilters={teamState.activeFilters}
-          onDeleteFns={{
-            success: (datas) => {
-              setTeamState({ type: actionTypes.setTeamList, payload: datas });
-            },
-          }}
-        />
+        {isLoading ? <div>Chargement...</div> : null}
+        {isError ? <div>{error}</div> : null}
+        {isSuccess ? (
+          <TeamsMembersList
+            teamList={teamState.teamList}
+            activeFilters={teamState.activeFilters}
+            onDeleteFns={{
+              success: (datas) => {
+                setTeamState({ type: actionTypes.setTeamList, payload: datas });
+              },
+            }}
+          />
+        ) : null}
       </div>
       {teamState.sidebarState === 'show'
         ? toggleSidebar(teamState.sidebarType)

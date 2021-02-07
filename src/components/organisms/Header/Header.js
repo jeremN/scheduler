@@ -5,7 +5,7 @@ import MainNavigation from '../../molecules/MainNavigation/MainNavigation';
 
 import './Header.scss';
 
-const Header = props => {
+const Header = () => {
   return (
     <header className="header">
       <Brand />
@@ -16,6 +16,6 @@ const Header = props => {
       </div>
     </header>
   );
-}
+};
 
 export default Header;

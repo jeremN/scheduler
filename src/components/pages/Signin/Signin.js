@@ -1,69 +1,29 @@
-import React, { Fragment, useReducer, useContext } from 'react';
+import React, { Fragment } from 'react';
 
 import Button from '../../atoms/Buttons/Buttons';
-import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 import ButtonLink from '../../atoms/Link/Link';
 
-import { AuthContext } from '../../../App';
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useAuth } from '../../../context/authContext';
+import { useAsync } from '../../../hooks/useAsync';
 
+import '../../atoms/Input/Input.scss';
 import './Signin.scss';
 
-const Signin = (props) => {
-  const { login } = useContext(AuthContext);
-  const signinState = {
-    email: '',
-    password: '',
-  };
-
-  const signinReducer = (state, { field, value }) => {
-    return {
-      ...state,
-      [field]: value,
-    };
-  };
-
-  const [state, setState] = useReducer(signinReducer, signinState);
-
-  const handleChange = (e, field = null, val = null) => {
-    setState({
-      field: field ? field : e.target.name,
-      value: val ? val : e.target.value,
-    });
-  };
+const Signin = () => {
+  const { isLoading, isError, error, run } = useAsync();
+  const { login } = useAuth();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-
-    clientWrapper('auth/login', { body: { ...state } }).then(async (result) => {
-      const datas = await result;
-      if (datas.status && datas.status === 422) {
-        throw new Error('Validation failed');
-      }
-
-      if (datas.status && datas.status !== 201) {
-        throw new Error('Could not authenticate you');
-      }
-
-      if (datas.userID) {
-        const remainingMs = 120 * 60 * 1000;
-        const expireDate = new Date(new Date().getTime() + remainingMs);
-        localStorage.setItem('_scheduler_user_id', datas.userID);
-        localStorage.setItem('_scheduler_token', datas.token);
-        localStorage.setItem('_scheduler_expire_date', expireDate);
-
-        await login({
-          userId: datas.userID,
-          token: datas.token,
-          remainingTime: remainingMs,
-        });
-        props.history.push('/home');
-      }
-    });
+    const { email, password } = evt.target.elements;
+    run(
+      login({
+        email: email.value,
+        password: password.value,
+      })
+    );
   };
-
-  const { email, password } = state;
 
   return (
     <Fragment>
@@ -71,16 +31,15 @@ const Signin = (props) => {
         <h2>Se connecter</h2>
         <form className="signup__form" onSubmit={handleSubmit}>
           <FormGroup
-            labelId="userEmail"
+            labelId="user-email"
             wording="Email"
             isRequired={true}
             modifiers={['column']}>
-            <Input
-              id="userEmail"
+            <input
+              id="user-email"
+              className="form__field"
               type="email"
               name="email"
-              value={email}
-              onChangeFn={handleChange}
             />
           </FormGroup>
           <FormGroup
@@ -88,13 +47,12 @@ const Signin = (props) => {
             wording="Mot de passe"
             isRequired={true}
             modifiers={['column']}>
-            <Input
+            <input
               id="userPassword"
+              className="form__field"
               type="password"
               name="password"
               autoComplete="current-password"
-              value={password}
-              onChangeFn={handleChange}
             />
           </FormGroup>
           <div className="form__inline">
@@ -109,6 +67,8 @@ const Signin = (props) => {
             </Button>
           </div>
         </form>
+        {isLoading ? <div>Loading...</div> : null}
+        {isError ? <div>An error occurred: {error}</div> : null}
         <ButtonLink linkTo="/signup" linkId="signupLink" modifiers={['simple']}>
           Vous n'avez pas de compte ? Créer un compte
         </ButtonLink>

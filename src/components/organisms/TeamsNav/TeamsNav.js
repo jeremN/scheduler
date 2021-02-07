@@ -14,12 +14,12 @@ const TeamsNav = ({
   <div className="teamsNavigations">
     <div className="teamsNavigations__leftBlock">
       <div className="teamsNavigations__length">
-        <b>{teamsMembersLength[0]}</b>{' '}
-        {teamsMembersLength[0] > 1 ? 'équipes' : 'équipe'}
+        <b>{teamsMembersLength[0]}</b>
+        {teamsMembersLength[0] > 1 ? ' équipes' : ' équipe'}
       </div>
       <div className="teamsNavigations__length">
-        <b>{teamsMembersLength[1]}</b>{' '}
-        {teamsMembersLength[1] > 1 ? 'équipiers' : 'équipier'}
+        <b>{teamsMembersLength[1]}</b>
+        {teamsMembersLength[1] > 1 ? ' équipiers' : ' équipier'}
       </div>
     </div>
     <div className="teamsNavigations__rightBlock">

@@ -1,75 +1,26 @@
-import React, { createContext, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { Suspense, lazy } from 'react';
 
-import Layout from './components/templates/Layout/Layout';
-import Routes from './components/templates/Routes/Routes';
-
-import useAuth from './hooks/isAuthenticated.';
+import { useAuth } from './context/authContext';
+import FullPageLoader from './components/organisms/FullPageLoader/FullPageLoader';
 
 import './App.scss';
 
-export const AuthContext = createContext();
-
-export const AuthContextProvider = ({
-  children,
-  isAuthenticated = false,
-  login = () => {},
-  logout = () => {},
-  state = {},
-}) => (
-  <AuthContext.Provider value={{ isAuthenticated, login, logout, state }}>
-    {children}
-  </AuthContext.Provider>
+const AuthenticatedApp = lazy(() =>
+  import(
+    /* webpackPrefetch: true */ './components/templates/AuthenticatedApp/AuthenticatedApp'
+  )
+);
+const UnauthenticatedApp = lazy(() =>
+  import('./components/templates/UnauthenticatedApp/UnauthenticatedApp')
 );
 
-function App(props) {
-  const { isAuthenticated, autoLogout, logout, login, state } = useAuth();
-
-  useEffect(() => {
-    async function isUserAuthenticated() {
-      const token = localStorage.getItem('_scheduler_token');
-      const expireDate = localStorage.getItem('_scheduler_expire_date');
-
-      if (!token || !expireDate) return;
-
-      if (new Date(expireDate) <= new Date()) {
-        logout();
-        return;
-      }
-
-      const userId = localStorage.getItem('_scheduler_user_id');
-      const remainingMs = new Date(expireDate).getTime() - new Date().getTime();
-
-      await login({
-        userId: userId,
-        token: token,
-        remainingTime: remainingMs,
-      });
-
-      props.history.push('/home');
-    }
-    isUserAuthenticated();
-  }, [login, logout, props.history]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      autoLogout(state.remainingTime);
-    }
-  }, [isAuthenticated, autoLogout, state.remainingTime]);
-
+function App() {
+  const { user } = useAuth();
   return (
-    <AuthContextProvider
-      isAuthenticated={isAuthenticated}
-      login={login}
-      logout={logout}
-      state={state}>
-      <div className="App">
-        <Layout>
-          <Routes />
-        </Layout>
-      </div>
-    </AuthContextProvider>
+    <Suspense fallback={<FullPageLoader />}>
+      {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+    </Suspense>
   );
 }
 
-export default withRouter(App);
+export default App;

@@ -10,7 +10,7 @@ import SelectInput from '../../atoms/SelectInput/SelectInput';
 import Button from '../../atoms/Buttons/Buttons';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
 
 import './TeamsSidebar.scss';
 
@@ -38,6 +38,7 @@ export default function SidebarNewMember({
   teamsOptions = [],
   teams = [],
 }) {
+  const client = useClient();
   const [formState, setFormState] = useState(defaultState);
 
   function handleAddNewMember() {
@@ -88,7 +89,7 @@ export default function SidebarNewMember({
       (team) => team._id === formState.selectedTeam
     );
 
-    clientWrapper(`teams/updateTeam/${formState.selectedTeam}`, {
+    client(`teams/updateTeam/${formState.selectedTeam}`, {
       body: {
         updatedTeam: {
           ...teamToUpdate[0],
@@ -100,10 +101,8 @@ export default function SidebarNewMember({
       .then(async (result) => {
         const datas = await result;
         if (datas.team) {
-          // eslint-disable-next-line no-unused-expressions
           onSubmitFns?.success(datas.team);
         } else {
-          // eslint-disable-next-line no-unused-expressions
           onSubmitFns?.failed();
           throw new Error(
             'An error occured while trying to add team member(s), please try again'
@@ -112,7 +111,6 @@ export default function SidebarNewMember({
       })
       .finally(() => {
         setFormState(defaultState);
-        // eslint-disable-next-line no-unused-expressions
         onSubmitFns?.clear();
       });
   };
@@ -232,7 +230,7 @@ export default function SidebarNewMember({
             Ajouter un équipier
           </Button>
           <Button modifiers={['primary']} type="submit">
-            Envoyer
+            Créer l'équipier
           </Button>
         </form>
       </SidebarContent>

@@ -8,7 +8,7 @@ import EditProfil from '../../../organisms/TeammateEditForm/TeammateEditForm';
 import TeammateProfil from '../../../organisms/TeammateProfil/TeammateProfil';
 import TeammateNotes from '../../../organisms/TeammateNotes/TeammateNotes';
 
-import clientWrapper from '../../../../utilities/fetchWrapper';
+import { useClient } from '../../../../context/authContext';
 
 import './Teammate.scss';
 
@@ -32,7 +32,8 @@ const initialState = {
   },
 };
 
-const Teammate = (props) => {
+const Teammate = () => {
+  const client = useClient();
   const [teammate, setTeammate] = useState(initialState);
   const [teammateProfilStatus, setTeammateProfilStatus] = useState('show');
   let { id, memberId } = useParams();
@@ -41,7 +42,7 @@ const Teammate = (props) => {
   useEffect(() => {
     let mounted = true;
 
-    clientWrapper(`teams/teammate/${id}/${memberId}`).then(async (result) => {
+    client(`teams/teammate/${id}/${memberId}`).then(async (result) => {
       const datas = await result;
 
       if (!!datas.teammate && mounted) {
@@ -67,7 +68,7 @@ const Teammate = (props) => {
     return function cleanup() {
       mounted = false;
     };
-  }, [id, memberId]);
+  }, [id, memberId, client]);
 
   function setEditProfilInitialState() {
     const editFormState = {};

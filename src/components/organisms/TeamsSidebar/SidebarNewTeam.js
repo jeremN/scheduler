@@ -9,7 +9,7 @@ import Input from '../../atoms/Input/Input';
 import Button from '../../atoms/Buttons/Buttons';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
 
 import './TeamsSidebar.scss';
 
@@ -34,6 +34,7 @@ const defaultState = {
 export default function SidebarNewTeam({
   onSubmitFns = { success: () => {}, failed: () => {}, clear: () => {} },
 }) {
+  const client = useClient();
   const [formState, setFormState] = useState(defaultState);
 
   const handleNewTeamChange = (evt, field = null, val = null) => {
@@ -68,17 +69,14 @@ export default function SidebarNewTeam({
   const handleNewTeamSubmit = (e) => {
     e.preventDefault();
 
-    clientWrapper(`teams/newTeam`, {
+    client(`teams/newTeam`, {
       body: { newTeam: { ...formState } },
     })
       .then(async (result) => {
         const datas = await result;
-
         if (datas.newTeamID) {
-          // eslint-disable-next-line no-unused-expressions
           onSubmitFns?.success(datas.teamsList);
         } else {
-          // eslint-disable-next-line no-unused-expressions
           onSubmitFns?.failed();
           throw new Error(
             'An error occured while trying to create your team, please try again'
@@ -87,7 +85,6 @@ export default function SidebarNewTeam({
       })
       .finally(() => {
         setFormState(defaultState);
-        // eslint-disable-next-line no-unused-expressions
         onSubmitFns?.clear();
       });
   };

@@ -2,7 +2,7 @@ import React from 'react';
 
 import TeamMemberCard from '../../molecules/TeamMemberCard/TeamMemberCard';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
 
 import './TeamMembersList.scss';
 
@@ -15,10 +15,11 @@ const TeamMembersList = ({
     failed: () => {},
   },
 }) => {
+  const client = useClient();
   function deleteMember(teamId, memberId) {
     const teams = [...teamList];
 
-    clientWrapper(`teams/deleteTeammate/${teamId}/${memberId}`, {
+    client(`teams/deleteTeammate/${teamId}/${memberId}`, {
       method: 'DELETE',
     }).then(async (result) => {
       const datas = await result;

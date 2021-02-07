@@ -4,9 +4,10 @@ import Card from '../../atoms/Card/Card';
 import Button from '../../atoms/Buttons/Buttons';
 import Label from '../../atoms/Label/Label';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
 
 const TeammateNotes = ({ notes, onSubmitFn, onDeleteFn, route }) => {
+  const client = useClient();
   const [newNote, setNewNotes] = useState();
 
   function handleChange({ target }) {
@@ -14,7 +15,7 @@ const TeammateNotes = ({ notes, onSubmitFn, onDeleteFn, route }) => {
   }
 
   function sendUpdatedNotes(updatedNotes) {
-    clientWrapper(route, {
+    client(route, {
       body: {
         updatedTeammate: { notes: updatedNotes },
       },
@@ -23,14 +24,12 @@ const TeammateNotes = ({ notes, onSubmitFn, onDeleteFn, route }) => {
       .then(async (result) => {
         const datas = await result;
 
-        if (!!datas.updated) {
-          // eslint-disable-next-line no-unused-expressions
+        if (datas.updated) {
           onSubmitFn?.success(updatedNotes);
         }
       })
       .finally(() => {
         setNewNotes('');
-        // eslint-disable-next-line no-unused-expressions
         onSubmitFn?.clear();
       });
   }
@@ -64,8 +63,11 @@ const TeammateNotes = ({ notes, onSubmitFn, onDeleteFn, route }) => {
       </form>
       <h3>Notes enregistrées ({notes.length})</h3>
       <ul className="teammate__notesList">
-        {notes.map(({ content, _id }) => (
-          <li key={_id} id={_id} className="teammate__noteItem">
+        {notes.map(({ content, _id }, index) => (
+          <li
+            key={_id || index}
+            id={_id || index}
+            className="teammate__noteItem">
             <span>{content}</span>
             <Button clicked={() => deleteNote(_id)}>Effacer</Button>
           </li>

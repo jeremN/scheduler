@@ -5,9 +5,10 @@ import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
 
 const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
+  const client = useClient();
   const [editProfil, setEditProfil] = useState(initialState);
 
   function handleChange({ target }) {
@@ -20,7 +21,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    clientWrapper(route, {
+    client(route, {
       body: {
         updatedTeammate: editProfil,
       },
@@ -30,12 +31,10 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
         const datas = await result;
 
         if (!!datas.updated) {
-          // eslint-disable-next-line no-unused-expressions
           onSubmitFn?.success(editProfil);
         }
       })
       .finally(() => {
-        // eslint-disable-next-line no-unused-expressions
         onSubmitFn?.clear();
       });
   }
@@ -123,7 +122,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
           Annuler
         </Button>
         <Button modifiers={['primary']} type="submit">
-          Enregistrer
+          Enregistrer le profil
         </Button>
       </div>
     </Card>
