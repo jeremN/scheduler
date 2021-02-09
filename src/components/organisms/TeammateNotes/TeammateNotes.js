@@ -4,45 +4,23 @@ import Card from '../../atoms/Card/Card';
 import Button from '../../atoms/Buttons/Buttons';
 import Label from '../../atoms/Label/Label';
 
-import { useClient } from '../../../context/authContext';
-
-const TeammateNotes = ({ notes, onSubmitFn, onDeleteFn, route }) => {
-  const client = useClient();
+const TeammateNotes = ({ notes, onSubmit }) => {
   const [newNote, setNewNotes] = useState();
 
   function handleChange({ target }) {
     setNewNotes(target.value);
   }
 
-  function sendUpdatedNotes(updatedNotes) {
-    client(route, {
-      body: {
-        updatedTeammate: { notes: updatedNotes },
-      },
-      method: 'PUT',
-    })
-      .then(async (result) => {
-        const datas = await result;
-
-        if (datas.updated) {
-          onSubmitFn?.success(updatedNotes);
-        }
-      })
-      .finally(() => {
-        setNewNotes('');
-        onSubmitFn?.clear();
-      });
-  }
-
   function handleSubmit(evt) {
     evt.preventDefault();
     const updatedNotes = [...notes, { content: newNote }];
-    sendUpdatedNotes(updatedNotes);
+    onSubmit({ notes: updatedNotes });
+    setNewNotes('');
   }
 
   function deleteNote(idToDelete) {
     const updatedNotes = notes.filter((note) => note._id !== idToDelete);
-    sendUpdatedNotes(updatedNotes);
+    onSubmit(updatedNotes);
   }
 
   return (

@@ -5,40 +5,24 @@ import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
 
-import { useClient } from '../../../context/authContext';
-
-const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
-  const client = useClient();
+const EditProfil = ({ initialState, onSubmit, onCancelFn }) => {
   const [editProfil, setEditProfil] = useState(initialState);
 
   function handleChange({ target }) {
     setEditProfil({
       ...editProfil,
-      [target.name]: target.value,
+      user: {
+        ...editProfil.user,
+        [target.name]: target.value,
+      },
     });
   }
 
   function handleSubmit(evt) {
     evt.preventDefault();
-
-    client(route, {
-      body: {
-        updatedTeammate: editProfil,
-      },
-      method: 'PUT',
-    })
-      .then(async (result) => {
-        const datas = await result;
-
-        if (!!datas.updated) {
-          onSubmitFn?.success(editProfil);
-        }
-      })
-      .finally(() => {
-        onSubmitFn?.clear();
-      });
+    onSubmit(editProfil.user);
   }
-
+  console.debug('edit form', editProfil);
   return (
     <Card classes={['teammate__edit']} tag={'form'} onSubmit={handleSubmit}>
       <Card classes={['teammate__infos']}>
@@ -50,7 +34,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
             id={`teammate_firstname`}
             type="text"
             name="firstname"
-            value={editProfil.firstname}
+            value={editProfil.user.firstname}
             onChangeFn={handleChange}
           />
         </FormGroup>
@@ -62,7 +46,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
             id={`teammate_lastname`}
             type="text"
             name="lastname"
-            value={editProfil.lastname}
+            value={editProfil.user.lastname}
             onChangeFn={handleChange}
           />
         </FormGroup>
@@ -76,7 +60,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
             id={`teammate_email`}
             type="email"
             name="email"
-            value={editProfil.email}
+            value={editProfil.user.email}
             onChangeFn={handleChange}
           />
         </FormGroup>
@@ -88,7 +72,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
             id={`teammate_poste`}
             type="text"
             name="poste"
-            value={editProfil.poste}
+            value={editProfil.user.poste}
             onChangeFn={handleChange}
           />
         </FormGroup>
@@ -100,7 +84,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
             id={`teammate_contract`}
             type="text"
             name="contract"
-            value={editProfil.contract}
+            value={editProfil.user.contract}
             onChangeFn={handleChange}
           />
         </FormGroup>
@@ -112,7 +96,7 @@ const EditProfil = ({ initialState, onSubmitFn, onCancelFn, route }) => {
             id={`teammate_hours`}
             type="text"
             name="hours"
-            value={editProfil.hours}
+            value={editProfil.user.hours}
             onChangeFn={handleChange}
           />
         </FormGroup>

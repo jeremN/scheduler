@@ -1,6 +1,6 @@
 import Home from '../components/pages/Home/Home';
 import Team from '../components/pages/Team/Team';
-import Teammate from '../components/pages/Team/Teammate/Teammate';
+import Teammate from '../components/pages/Teammate/Teammate';
 import Plannings from '../components/pages/Plannings/Plannings';
 import EditPlanning from '../components/pages/Plannings/Edit/Edit';
 import Settings from '../components/pages/Settings/Settings';

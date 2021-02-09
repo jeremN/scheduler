@@ -13,6 +13,7 @@
     "react-calendar": "^3.3.0",
     "react-datepicker": "^2.14.1",
     "react-dom": "^17.0.1",
+    "react-error-boundary": "^3.1.0",
     "react-moveable": "^0.18.1",
     "react-scripts": "^4.0.1"
   },
@@ -47,7 +48,6 @@
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^6.1.15",
     "@testing-library/react-hooks": "^5.0.3",
-    "axios": "^0.21.1",
     "gsap": "^3.6.0",
     "history": "^5.0.0",
     "msw": "^0.25.0",

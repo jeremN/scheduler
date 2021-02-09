@@ -15,7 +15,7 @@ import {
 import * as teamsDB from '../../../tests/db/teams';
 import Router from 'react-router';
 
-import Teammate from '../Team/Teammate/Teammate';
+import Teammate from '../Teammate/Teammate';
 
 const spyParams = jest.spyOn(Router, 'useParams');
 const defaultIndexes = { team: 0, member: 0 };
