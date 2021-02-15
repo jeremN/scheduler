@@ -1,26 +1,32 @@
 import React, { Fragment } from 'react';
 
+import Loader from '../../atoms/Loader/Loader';
 import Button from '../../atoms/Buttons/Buttons';
-import FormGroup from '../../molecules/FormGroup/FormGroup';
 import ButtonLink from '../../atoms/Link/Link';
+import FormGroup from '../../molecules/FormGroup/FormGroup';
+import ErrorMessage from '../../molecules/ErrorMessage/ErrorMessage';
 
 import { useAuth } from '../../../context/authContext';
+import { useAsync } from '../../../hooks/useAsync';
 
 import './Signup.scss';
 
 const Signup = () => {
   const { register } = useAuth();
+  const { isLoading, isError, error, run } = useAsync();
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     const { email, firstname, lastname, password } = evt.target.elements;
 
-    await register({
-      email: email.value,
-      password: password.value,
-      firstname: firstname.value,
-      lastname: lastname.value,
-    });
+    run(
+      register({
+        email: email.value,
+        password: password.value,
+        firstname: firstname.value,
+        lastname: lastname.value,
+      })
+    );
   };
 
   return (
@@ -82,6 +88,8 @@ const Signup = () => {
             S'inscrire
           </Button>
         </form>
+        {isLoading ? <Loader /> : null}
+        {isError ? <ErrorMessage error={error} /> : null}
         <ButtonLink linkTo="/signup" linkId="signupLink" modifiers={['simple']}>
           Vous avez déjà un compte ? Se connecter
         </ButtonLink>

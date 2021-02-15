@@ -42,25 +42,19 @@ async function updateTeammate(teamId, memberId, payload) {
     if (currentTeam._id === teamId) {
       currentTeam.members = team.members.map((member) => {
         if (member._id === memberId) {
-          console.debug('A');
           return {
             ...member,
             ...payload,
             notes: [...member?.notes, ...payload?.notes],
           };
         }
-        console.debug('B');
         return member;
       });
-      console.debug('D');
       return currentTeam;
     }
-    console.debug('E');
     return currentTeam;
   });
-  console.debug('F', updatedTeams);
 
-  console.debug('updated', updatedTeams);
   teams = updatedTeams;
   return teams;
 }

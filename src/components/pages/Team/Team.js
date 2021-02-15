@@ -130,47 +130,87 @@ const Team = () => {
     });
   }
 
+  function onSubmitNewMember() {
+    return {
+      success: ({ _id: teamId, members }) => {
+        const updatedTeams = teamState.teamList.map((team) => {
+          if (teamId === team._id) {
+            team.members = members;
+          }
+          return team;
+        });
+        setTeamState({
+          type: actionTypes.setTeamList,
+          payload: updatedTeams,
+        });
+      },
+      clear: () => {
+        setTeamState({ type: actionTypes.clearSidebarState });
+      },
+    };
+  }
+
+  function onSubmitNewTeam() {
+    return {
+      success: (datas) => {
+        setTeamState({ type: actionTypes.setTeamList, payload: datas });
+      },
+      clear: () => {
+        setTeamState({ type: actionTypes.clearSidebarState });
+      },
+    };
+  }
+
   function toggleSidebar(type = 'default') {
     const types = {
       member: (
         <SidebarNewMember
+          onCloseSidebar={() => onCloseSidebar()}
           teamsOptions={teamState.filters.teamName}
           teams={[...teamState.teamList]}
-          onSubmitFns={{
-            success: ({ _id: teamId, members }) => {
-              const updatedTeams = teamState.teamList.map((team) => {
-                if (teamId === team._id) {
-                  team.members = members;
-                }
-                return team;
-              });
-              setTeamState({
-                type: actionTypes.setTeamList,
-                payload: updatedTeams,
-              });
-            },
-            clear: () => {
-              setTeamState({ type: actionTypes.clearSidebarState });
-            },
-          }}
+          onSubmitFns={onSubmitNewMember()}
         />
       ),
       team: (
         <SidebarNewTeam
-          onSubmitFns={{
-            success: (datas) => {
-              setTeamState({ type: actionTypes.setTeamList, payload: datas });
-            },
-            clear: () => {
-              setTeamState({ type: actionTypes.clearSidebarState });
-            },
-          }}
+          onCloseSidebar={() => onCloseSidebar()}
+          onSubmitFns={onSubmitNewTeam()}
         />
       ),
       default: null,
     };
 
     return types[type];
+  }
+
+  function onDeleteMember(teamId, memberId) {
+    const teams = [...teamState.teamList];
+
+    client(`teams/deleteTeammate/${teamId}/${memberId}`, {
+      method: 'DELETE',
+    }).then(async (result) => {
+      const datas = await result;
+
+      if (datas.deleted) {
+        const teamToUpdate = teams.map((team) => {
+          if (team._id === teamId) {
+            const updatedMembers = [...team.members].filter(
+              ({ _id }) => _id !== memberId
+            );
+            team.members = updatedMembers;
+          }
+          return team;
+        });
+        setTeamState({
+          type: actionTypes.setTeamList,
+          payload: teamToUpdate,
+        });
+      } else {
+        throw new Error(
+          'An error occured while trying to delete a team member, please try again'
+        );
+      }
+    });
   }
 
   const onFiltersChangeHandler = (evt) => {
@@ -220,11 +260,15 @@ const Team = () => {
     </Fragment>
   );
 
+  const onCloseSidebar = () => {
+    setSidebarStateType('default');
+    setTeamState({ type: actionTypes.clearSidebarState });
+  };
+
   return (
     <Fragment>
       <TeamsNav
         teamsMembersLength={[teamState.teamList.length, getMembersLength()]}
-        filterTeamsFn={() => setSidebarStateType('filters')}
         addNewTeamMemberFn={() => setSidebarStateType('member')}
         createTeamFn={() => setSidebarStateType('team')}
       />
@@ -240,11 +284,7 @@ const Team = () => {
           <TeamsMembersList
             teamList={teamState.teamList}
             activeFilters={teamState.activeFilters}
-            onDeleteFns={{
-              success: (datas) => {
-                setTeamState({ type: actionTypes.setTeamList, payload: datas });
-              },
-            }}
+            onDeleteFn={onDeleteMember}
           />
         ) : null}
       </div>

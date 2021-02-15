@@ -43,6 +43,7 @@ export const handlers = [
   rest.delete(
     `${apiURL}/teams/deleteTeammate/:teamId/:memberId`,
     async (_, res, ctx) => {
+      console.debug('delete member handler');
       return res(
         ctx.status(200),
         ctx.json({ message: 'Teammate deleted !', deleted: true })
@@ -70,9 +71,9 @@ export const handlers = [
     async (req, res, ctx) => {
       const { id, memberId } = req.params;
       const { updatedTeammate } = req.body;
-      console.debug('updateTeammate', updatedTeammate);
+      // console.debug('updateTeammate', updatedTeammate);
       // const teams = await teamsDB.updateTeammate(id, memberId, updatedTeammate);
-      console.debug('updateTeammate');
+      // console.debug('updateTeammate');
       return res(
         ctx.status(200),
         ctx.json({ message: 'Teammate profil updated !', updated: true })

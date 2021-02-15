@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react';
 
+import Loader from '../../atoms/Loader/Loader';
 import Button from '../../atoms/Buttons/Buttons';
-import FormGroup from '../../molecules/FormGroup/FormGroup';
 import ButtonLink from '../../atoms/Link/Link';
+import FormGroup from '../../molecules/FormGroup/FormGroup';
+import ErrorMessage from '../../molecules/ErrorMessage/ErrorMessage';
 
 import { useAuth } from '../../../context/authContext';
 import { useAsync } from '../../../hooks/useAsync';
@@ -67,8 +69,8 @@ const Signin = () => {
             </Button>
           </div>
         </form>
-        {isLoading ? <div>Loading...</div> : null}
-        {isError ? <div>An error occurred: {error}</div> : null}
+        {isLoading ? <Loader /> : null}
+        {isError ? <ErrorMessage error={error} /> : null}
         <ButtonLink linkTo="/signup" linkId="signupLink" modifiers={['simple']}>
           Vous n'avez pas de compte ? Créer un compte
         </ButtonLink>

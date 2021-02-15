@@ -6,7 +6,6 @@ import Icon from '../../atoms/Icon/Icon';
 import './TeamsNav.scss';
 
 const TeamsNav = ({
-  filterTeamsFn = () => {},
   addNewTeamMemberFn = () => {},
   createTeamFn = () => {},
   teamsMembersLength = [0, 0],
@@ -55,22 +54,6 @@ const TeamsNav = ({
         </Icon>
         créer un équipier
       </Buttons>
-      {/*<Buttons clicked={filterTeamsFn}>
-        <Icon>
-          <svg
-            width="15"
-            height="16"
-            viewBox="0 0 15 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M13.9232 0H0.685578C0.0773203 0 -0.229605 0.808312 0.20138 1.28034L5.47826 7.06065V13.5C5.47826 13.7447 5.58728 13.9741 5.77034 14.1144L8.05295 15.8638C8.50328 16.2091 9.13043 15.8592 9.13043 15.2494V7.06065L14.4074 1.28034C14.8376 0.80925 14.5327 0 13.9232 0Z"
-              fill="#788590"
-            />
-          </svg>
-        </Icon>
-        Filtrer
-      </Buttons>*/}
     </div>
   </div>
 );

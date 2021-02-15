@@ -37,7 +37,7 @@ const initialState = {
 const Teammate = () => {
   let { id, memberId } = useParams();
   const client = useClient();
-  const { run, isError, isLoading, isSuccess } = useAsync();
+  const { run, isError, error, isLoading } = useAsync();
   const [teammate, setTeammate] = useState(initialState);
   const [teammateProfilStatus, setTeammateProfilStatus] = useState('show');
 
@@ -48,7 +48,7 @@ const Teammate = () => {
       client(`teams/teammate/${id}/${memberId}`).then(async (result) => {
         const datas = await result;
 
-        if (!!datas.teammate && mounted) {
+        if (datas.teammate && mounted) {
           const userObj = {};
           Object.keys(datas.teammate[0]).map((key) =>
             key !== '_id' ? (userObj[key] = datas.teammate[0][key]) : null
@@ -72,11 +72,7 @@ const Teammate = () => {
     return function cleanup() {
       mounted = false;
     };
-  }, [id, memberId, client]);
-
-  function setEditProfilInitialState() {
-    return { ...teammate };
-  }
+  }, [id, memberId, client, run]);
 
   function useUpdateTeammate(updatedUser) {
     run(
@@ -127,7 +123,7 @@ const Teammate = () => {
           <h2>
             {teammate.user.firstname} {teammate.user.lastname}
           </h2>
-          {isLoading ? <Loader /> : ''}
+          {isLoading ? <Loader /> : null}
         </div>
         <section className="teammate__main">
           {teammateProfilStatus === 'edit' ? (

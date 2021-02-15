@@ -1,6 +1,8 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 
+import FullPageErrorFallback from '../../organisms/FullPageErrorFallback/FullPageErrorFallback';
 import Layout from '../Layout/Layout';
 import authenticatedRoutes from '../../../routes/authenticatedRoutes';
 
@@ -16,9 +18,11 @@ function AppRoutes() {
 
 function AuthenticatedApp() {
   return (
-    <Layout>
-      <AppRoutes />
-    </Layout>
+    <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
+      <Layout>
+        <AppRoutes />
+      </Layout>
+    </ErrorBoundary>
   );
 }
 

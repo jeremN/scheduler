@@ -5,11 +5,14 @@ import {
   SidebarHeading,
   SidebarContent,
 } from '../../atoms/Sidebar/Sidebar';
+import Loader from '../../atoms/Loader/Loader';
 import Input from '../../atoms/Input/Input';
 import Button from '../../atoms/Buttons/Buttons';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
+import ErrorMessage from '../../molecules/ErrorMessage/ErrorMessage';
 
 import { useClient } from '../../../context/authContext';
+import { useAsync } from '../../../hooks/useAsync';
 
 import './TeamsSidebar.scss';
 
@@ -32,9 +35,11 @@ const defaultState = {
 };
 
 export default function SidebarNewTeam({
+  onCloseSidebar = () => {},
   onSubmitFns = { success: () => {}, failed: () => {}, clear: () => {} },
 }) {
   const client = useClient();
+  const { isLoading, isError, error, run } = useAsync();
   const [formState, setFormState] = useState(defaultState);
 
   const handleNewTeamChange = (evt, field = null, val = null) => {
@@ -69,24 +74,27 @@ export default function SidebarNewTeam({
   const handleNewTeamSubmit = (e) => {
     e.preventDefault();
 
-    client(`teams/newTeam`, {
-      body: { newTeam: { ...formState } },
-    })
-      .then(async (result) => {
-        const datas = await result;
-        if (datas.newTeamID) {
-          onSubmitFns?.success(datas.teamsList);
-        } else {
-          onSubmitFns?.failed();
-          throw new Error(
-            'An error occured while trying to create your team, please try again'
-          );
-        }
+    run(
+      client(`teams/newTeam`, {
+        body: { newTeam: { ...formState } },
       })
-      .finally(() => {
-        setFormState(defaultState);
-        onSubmitFns?.clear();
-      });
+        .then(async (result) => {
+          const datas = await result;
+
+          if (datas.newTeamID) {
+            onSubmitFns?.success(datas.teamsList);
+          } else {
+            onSubmitFns?.failed();
+            throw new Error(
+              'An error occured while trying to create your team, please try again'
+            );
+          }
+        })
+        .finally(() => {
+          setFormState(defaultState);
+          onSubmitFns?.clear();
+        })
+    );
   };
 
   function handleAddNewTeamMember() {
@@ -109,6 +117,12 @@ export default function SidebarNewTeam({
 
   return (
     <Sidebar modifiers={['isVisible']}>
+      <Button
+        modifiers={['rounded', 'bordered', 'even']}
+        clicked={onCloseSidebar}
+        type="submit">
+        X
+      </Button>
       <SidebarHeading>Nouvelle équipe</SidebarHeading>
       <SidebarContent>
         <form
@@ -247,7 +261,9 @@ export default function SidebarNewTeam({
           </Button>
           <Button modifiers={['primary']} type="submit">
             Créer l'équipe
+            {isLoading ? <Loader /> : null}
           </Button>
+          {isError ? <ErrorMessage error={error} /> : null}
         </form>
       </SidebarContent>
     </Sidebar>

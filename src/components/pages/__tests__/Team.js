@@ -160,7 +160,6 @@ describe('Team Page', () => {
     const btns = await screen.getAllByText(/Effacer/i);
     const btnToClick = btns[btns.length - 1];
     await act(async () => userEvent.click(btnToClick));
-
     await waitFor(
       () => expect(btnToClick.closest('.member')).not.toBeInTheDocument(),
       {

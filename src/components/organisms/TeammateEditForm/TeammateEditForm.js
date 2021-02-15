@@ -22,7 +22,7 @@ const EditProfil = ({ initialState, onSubmit, onCancelFn }) => {
     evt.preventDefault();
     onSubmit(editProfil.user);
   }
-  console.debug('edit form', editProfil);
+
   return (
     <Card classes={['teammate__edit']} tag={'form'} onSubmit={handleSubmit}>
       <Card classes={['teammate__infos']}>
