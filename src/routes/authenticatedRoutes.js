@@ -2,7 +2,7 @@ import Home from '../components/pages/Home/Home';
 import Team from '../components/pages/Team/Team';
 import Teammate from '../components/pages/Teammate/Teammate';
 import Plannings from '../components/pages/Plannings/Plannings';
-import EditPlanning from '../components/pages/Plannings/Edit/Edit';
+import EditPlanning from '../components/pages/EditPlanning/EditPlanning';
 import Settings from '../components/pages/Settings/Settings';
 import NotFound from '../components/pages/NotFound/NotFound';
 
