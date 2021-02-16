@@ -64,6 +64,15 @@
   + .sidebar {
     overflow-y: scroll;
     max-height: 100%;
+    top: 0;
+    padding-right: 60px;
+    
+    .button--even {
+      position: sticky;
+      transform: translateX(48px);
+      left: calc(100% + 70px);
+      top: 0;
+    } 
 
     .sidebar__content {
       padding-bottom: 5rem;

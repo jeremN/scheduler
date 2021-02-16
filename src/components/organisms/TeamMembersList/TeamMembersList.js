@@ -2,47 +2,13 @@ import React from 'react';
 
 import TeamMemberCard from '../../molecules/TeamMemberCard/TeamMemberCard';
 
-import clientWrapper from '../../../utilities/fetchWrapper';
-
 import './TeamMembersList.scss';
 
 const TeamMembersList = ({
   teamList,
   activeFilters,
-  onDeleteFns = {
-    clear: () => {},
-    success: () => {},
-    failed: () => {},
-  },
+  onDeleteFn = () => {},
 }) => {
-  function deleteMember(teamId, memberId) {
-    const teams = [...teamList];
-
-    clientWrapper(`teams/deleteTeammate/${teamId}/${memberId}`, {
-      method: 'DELETE',
-    }).then(async (result) => {
-      const datas = await result;
-
-      if (datas.deleted) {
-        const teamToUpdate = teams.map((team) => {
-          if (team._id === teamId) {
-            const updatedMembers = [...team.members].filter(
-              ({ _id }) => _id !== memberId
-            );
-            team.members = updatedMembers;
-          }
-          return team;
-        });
-        onDeleteFns.success(teamToUpdate);
-      } else {
-        onDeleteFns.failed();
-        throw new Error(
-          'An error occured while trying to delete a team member, please try again'
-        );
-      }
-    });
-  }
-
   return (
     <div className="teams__list">
       <ul className="teams__listHead">
@@ -62,7 +28,7 @@ const TeamMembersList = ({
               ({ _id, firstname, lastname, email, hours, poste, contract }) => (
                 <TeamMemberCard
                   key={_id}
-                  onDeleteMember={() => deleteMember(teamId, _id)}
+                  onDeleteMember={() => onDeleteFn(teamId, _id)}
                   member={{
                     _id,
                     email,

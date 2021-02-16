@@ -1,14 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Card from '../../../atoms/Card/Card';
-import Icon from '../../../atoms/Icon/Icon';
-import TeammateNav from '../../../organisms/TeammateNav/TeammateNav';
-import EditProfil from '../../../organisms/TeammateEditForm/TeammateEditForm';
-import TeammateProfil from '../../../organisms/TeammateProfil/TeammateProfil';
-import TeammateNotes from '../../../organisms/TeammateNotes/TeammateNotes';
+import Card from '../../atoms/Card/Card';
+import Icon from '../../atoms/Icon/Icon';
+import Loader from '../../atoms/Loader/Loader';
+import TeammateNav from '../../organisms/TeammateNav/TeammateNav';
+import EditProfil from '../../organisms/TeammateEditForm/TeammateEditForm';
+import TeammateProfil from '../../organisms/TeammateProfil/TeammateProfil';
+import TeammateNotes from '../../organisms/TeammateNotes/TeammateNotes';
 
-import clientWrapper from '../../../../utilities/fetchWrapper';
+import { useClient } from '../../../context/authContext';
+import { useAsync } from '../../../hooks/useAsync';
 
 import './Teammate.scss';
 
@@ -32,49 +34,69 @@ const initialState = {
   },
 };
 
-const Teammate = (props) => {
+const Teammate = () => {
+  let { id, memberId } = useParams();
+  const client = useClient();
+  const { run, isError, error, isLoading } = useAsync();
   const [teammate, setTeammate] = useState(initialState);
   const [teammateProfilStatus, setTeammateProfilStatus] = useState('show');
-  let { id, memberId } = useParams();
-  const updateTeammateRoute = `teams/updateTeammate/${id}/${memberId}`;
 
   useEffect(() => {
     let mounted = true;
 
-    clientWrapper(`teams/teammate/${id}/${memberId}`).then(async (result) => {
-      const datas = await result;
+    run(
+      client(`teams/teammate/${id}/${memberId}`).then(async (result) => {
+        const datas = await result;
 
-      if (!!datas.teammate && mounted) {
-        const userObj = {};
-        Object.keys(datas.teammate[0]).map((key) =>
-          key !== '_id' ? (userObj[key] = datas.teammate[0][key]) : null
-        );
+        if (datas.teammate && mounted) {
+          const userObj = {};
+          Object.keys(datas.teammate[0]).map((key) =>
+            key !== '_id' ? (userObj[key] = datas.teammate[0][key]) : null
+          );
 
-        setTeammate({
-          _id: datas.teammate[0]._id,
-          user: {
-            ...userObj,
-            location: {
-              ...datas.location,
+          setTeammate({
+            _id: datas.teammate[0]._id,
+            user: {
+              ...userObj,
+              location: {
+                ...datas.location,
+              },
+              teamName: datas.teamName,
+              status: 'En attente',
+              plannings: [],
             },
-            teamName: datas.teamName,
-            status: 'En attente',
-            plannings: [],
-          },
-        });
-      }
-    });
+          });
+        }
+      })
+    );
     return function cleanup() {
       mounted = false;
     };
-  }, [id, memberId]);
+  }, [id, memberId, client, run]);
 
-  function setEditProfilInitialState() {
-    const editFormState = {};
-    ['firstname', 'lastname', 'contract', 'hours', 'poste', 'email'].map(
-      (key) => (editFormState[key] = teammate.user[key])
+  function useUpdateTeammate(updatedUser) {
+    run(
+      client(`teams/updateTeammate/${id}/${memberId}`, {
+        body: {
+          updatedTeammate: updatedUser,
+        },
+        method: 'PUT',
+      })
+        .then(async (result) => {
+          const datas = await result;
+
+          if (datas.updated) {
+            setTeammate({
+              ...teammate,
+              user: {
+                ...teammate.user,
+                ...updatedUser,
+              },
+            });
+          }
+        })
+        .finally(() => setTeammateProfilStatus('show'))
     );
-    return editFormState;
   }
 
   return (
@@ -101,26 +123,13 @@ const Teammate = (props) => {
           <h2>
             {teammate.user.firstname} {teammate.user.lastname}
           </h2>
+          {isLoading ? <Loader /> : null}
         </div>
         <section className="teammate__main">
           {teammateProfilStatus === 'edit' ? (
             <EditProfil
-              initialState={setEditProfilInitialState}
-              route={updateTeammateRoute}
-              onSubmitFn={{
-                success: (updatedUser) => {
-                  setTeammate({
-                    ...teammate,
-                    user: {
-                      ...teammate.user,
-                      ...updatedUser,
-                    },
-                  });
-                },
-                clear: () => {
-                  setTeammateProfilStatus('show');
-                },
-              }}
+              initialState={{ ...teammate }}
+              onSubmit={useUpdateTeammate}
               onCancelFn={() => setTeammateProfilStatus('show')}
             />
           ) : (
@@ -140,19 +149,7 @@ const Teammate = (props) => {
         <aside className="teammate__others">
           <TeammateNotes
             notes={teammate.user.notes}
-            route={updateTeammateRoute}
-            onSubmitFn={{
-              success: (updatedNotes) => {
-                setTeammate({
-                  ...teammate,
-                  user: {
-                    ...teammate.user,
-                    notes: updatedNotes,
-                  },
-                });
-              },
-              clear: () => {},
-            }}
+            onSubmit={useUpdateTeammate}
           />
         </aside>
       </div>

@@ -1,47 +1,37 @@
-import React, { useContext, useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-
 import Card from '../../atoms/Card/Card';
 import CardHeading from '../../molecules/CardHeading/CardHeading';
 import ButtonLink from '../../atoms/Link/Link';
-
-import { AuthContext } from '../../../App';
-import clientWrapper from '../../../utilities/fetchWrapper';
-
+import { useAuth, useClient } from '../../../context/authContext';
+import { useAsync } from '../../../hooks/useAsync';
 import './Home.scss';
 
 const Home = () => {
-  const { state } = useContext(AuthContext);
-  const [user, setUser] = useState({
+  const {
+    user: { userId },
+  } = useAuth();
+  const client = useClient();
+  const { isLoading, isSuccess, isError, error, run } = useAsync();
+  const [currentUser, setCurrentUser] = useState({
     firstname: '',
     lastname: '',
     email: '',
     team: [],
     plannings: [],
   });
-  const [requestState, setRequestState] = useState({
-    status: 'idle',
-    error: null,
-  });
 
   useEffect(() => {
-    setRequestState({ status: 'pending' });
-    clientWrapper(`user/${state.userId}`)
-      .then(async (result) => {
+    run(
+      client(`user/${userId}`).then(async (result) => {
         const datas = await result;
 
-        if (!!datas.user) {
-          setUser(datas.user);
-          setRequestState({ status: 'fulfilled' });
-        } else {
-          setRequestState({ status: 'rejected', error: datas });
+        if (datas.user) {
+          setCurrentUser(datas.user);
         }
       })
-      .finally(() => {
-        setRequestState({ status: 'idle' });
-      });
-  }, [state.userId]);
+    );
+  }, [userId, client, run]);
 
   const wordingDefault = {
     noPlanningDefault: "Vous n'avez pas créer de planning",
@@ -90,11 +80,13 @@ const Home = () => {
           </CardHeading>
           <Card>
             <ul>
-              {requestState === 'pending' ? (
+              {isLoading ? (
                 <li>Chargement...</li>
-              ) : (
-                addListLink(user.plannings, 'title', 'noPlanningDefault')
-              )}
+              ) : isError ? (
+                <div>Une erreur s'est produite {error} </div>
+              ) : isSuccess ? (
+                addListLink(currentUser.plannings, 'title', 'noPlanningDefault')
+              ) : null}
             </ul>
           </Card>
         </div>
@@ -111,11 +103,13 @@ const Home = () => {
           </CardHeading>
           <Card>
             <ul>
-              {requestState === 'pending' ? (
+              {isLoading ? (
                 <li>Chargement...</li>
-              ) : (
-                addListLink(user.team, 'name', 'noTeamDefault')
-              )}
+              ) : isError ? (
+                <div>Une erreur s'est produite {error} </div>
+              ) : isSuccess ? (
+                addListLink(currentUser.team, 'name', 'noTeamDefault')
+              ) : null}
             </ul>
           </Card>
         </div>
