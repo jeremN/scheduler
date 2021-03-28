@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import Loader from '../../atoms/Loader/Loader';
 import Button from '../../atoms/Buttons/Buttons';
@@ -28,7 +28,7 @@ const Signin = () => {
   };
 
   return (
-    <Fragment>
+    <main>
       <section className="signin">
         <h2>Se connecter</h2>
         <form className="signup__form" onSubmit={handleSubmit}>
@@ -76,7 +76,7 @@ const Signin = () => {
         </ButtonLink>
       </section>
       <div className="signin__illustration"></div>
-    </Fragment>
+    </main>
   );
 };
 

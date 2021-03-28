@@ -1,1 +1,5 @@
 @import '../../helpers/helpers.scss';
+
+main {
+  min-height: calc(100% - 100px);
+}

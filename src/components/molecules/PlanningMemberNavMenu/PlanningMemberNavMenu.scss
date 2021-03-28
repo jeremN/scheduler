@@ -1,0 +1,65 @@
+@import '../../helpers/helpers.scss';
+
+.memberNavMenu {
+  position: relative;
+
+  > span {
+    background-color: var(--hawkesBlue);
+
+    &:hover {
+       & + .memberNavMenu__infos {
+        opacity: 1;
+        transform: translate3d(0,0,0);  
+      }
+    }
+  }
+
+  &__infos {
+    background-color: var(--bluemine);
+    color: var(--white);
+    position: absolute;
+    top: calc(100% + 1.2rem);
+    left: 0;
+    display: flex;
+    min-width: 236px;
+    padding: 12px;
+    justify-content: space-between;
+    border-radius: 6px;
+    z-index: 5;
+    opacity: 0;
+    transform: translate3d(-0, 1rem, 0);
+    transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-radius: 6px;
+      border-style: solid;
+      border-width: 0 10px 12px 10px;
+      border-color: transparent transparent var(--bluemine) transparent;
+      position: absolute;
+      top: -1rem;
+      left: 1rem;
+    }
+  }
+
+  &__leftBlock,
+  &__rightBlock {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__fullname,
+  &__timeTitle {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+
+  &__poste,
+  &__hours {
+    color: var(--greyLighter);
+    font-size: 1rem;
+  }
+}

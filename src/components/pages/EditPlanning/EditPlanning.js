@@ -1,84 +1,81 @@
-import React, { Fragment, useEffect, useReducer } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import {
+  PlanningProvider,
+  useEditPlanning,
+} from '../../../context/editPlanningContext';
+
+import Loader from '../../atoms/Loader/Loader';
+import ErrorMessage from '../../molecules/ErrorMessage/ErrorMessage';
+import CalendarContextMenu from '../../molecules/CalendarContextMenu/CalendarContextMenu';
 import EditPlanningNav from '../../organisms/EditPlanningNavigation/EditPlanningNavigation';
 import Calendar from '../../organisms/Calendar/Calendar';
 
+import { useAsync } from '../../../hooks/useAsync';
+import { useGetBoundingRect } from '../../../hooks/useGetBoundingRect';
+
 import './EditPlanning.scss';
+// url test: http://localhost:3000/plannings/edit/603815eb29ff8e29304c158c
 
-const EditPlanning = (props) => {
+function EditedPlanning() {
   let { id } = useParams();
-
-  // TODO => replace shop by team (when team page will be available)
-  const initialState = {
-    startHours: '',
-    endHours: '',
-    startDate: '',
-    endDate: '',
-    shop: '',
-    title: '',
-  };
-
-  const planningReducer = (currentState, action) => {
-    switch (action.type) {
-      case 'updateTeam':
-        return {
-          ...currentState,
-          shop: action.shop,
-        };
-      case 'updateContent':
-        return {
-          ...currentState,
-          content: action.content,
-        };
-      case 'setPlanningState':
-        return {
-          ...currentState,
-          ...action.newState,
-        };
-      default:
-        return currentState;
-    }
-  };
-
-  const [planningState, dispatchPlanning] = useReducer(
-    planningReducer,
-    initialState
-  );
+  const {
+    planningState,
+    contextMenu,
+    toggleContextMenu,
+    loadPlanning,
+    addEmployeeSchedule,
+  } = useEditPlanning();
+  const { run, error, isError, isLoading, isSuccess } = useAsync();
+  const [dimensions, targetRef] = useGetBoundingRect();
 
   useEffect(() => {
-    async function fetchPlanning() {
-      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/planning/${id}`;
-      await fetch(url, {
-        method: 'GET',
-      })
-        .then((response) => response.json())
-        .then(
-          (result) => {
-            console.debug('edit page', result);
-            dispatchPlanning({
-              type: 'setPlanningState',
-              newState: result.planning,
-            });
-          },
-          (error) => {
-            console.error('GET plannings list error', error);
-          }
-        );
-    }
-    fetchPlanning();
-  }, []);
+    run(loadPlanning(id));
+  }, [run, id, loadPlanning]);
 
   return (
-    <Fragment>
-      <EditPlanningNav />
-      <Calendar
-        startHours={planningState.startHours}
-        endHours={planningState.endHours}
-        startDate={planningState.startDate}
-        endDate={planningState.endDate}></Calendar>
-    </Fragment>
+    <main ref={targetRef}>
+      <EditPlanningNav team={planningState.team[0]} />
+      {isLoading ? <Loader /> : null}
+      {isSuccess ? (
+        <>
+          {contextMenu.show ? (
+            <CalendarContextMenu
+              members={planningState.team[0]?.members}
+              dayDatas={{
+                day: contextMenu.day,
+                endHour: contextMenu.day.setHours(
+                  ...planningState.endHours.split(':').map((value) => +value)
+                ),
+                startHour: contextMenu.day.setHours(
+                  ...planningState.startHours.split(':').map((value) => +value)
+                ),
+              }}
+              onSubmit={addEmployeeSchedule}
+              onCancel={toggleContextMenu}
+            />
+          ) : null}
+          <Calendar
+            startHours={planningState.startHours}
+            endHours={planningState.endHours}
+            startDate={planningState.startDate}
+            endDate={planningState.endDate}
+            dimensions={dimensions}
+            onRightClick={toggleContextMenu}></Calendar>
+        </>
+      ) : null}
+      {isError ? <ErrorMessage error={error} /> : null}
+    </main>
   );
-};
+}
+
+function EditPlanning() {
+  return (
+    <PlanningProvider>
+      <EditedPlanning />
+    </PlanningProvider>
+  );
+}
 
 export default EditPlanning;

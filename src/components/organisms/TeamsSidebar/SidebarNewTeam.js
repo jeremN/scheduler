@@ -42,7 +42,7 @@ export default function SidebarNewTeam({
   const { isLoading, isError, error, run } = useAsync();
   const [formState, setFormState] = useState(defaultState);
 
-  const handleNewTeamChange = (evt, field = null, val = null) => {
+  const handleNewTeamChange = ({ target }) => {
     const updatedTeamForm = { ...formState };
     const isLocation = ['city', 'address'];
     const isMember = [
@@ -54,14 +54,13 @@ export default function SidebarNewTeam({
       'email',
     ];
 
-    const fieldName = field ? field : evt.target.name;
-    const fieldValue = val ? val : evt.target.value;
+    const { name: fieldName, value: fieldValue } = target;
 
     if (isLocation.includes(fieldName)) {
       updatedTeamForm.location = { ...formState.location };
       updatedTeamForm.location[fieldName] = fieldValue;
     } else if (isMember.includes(fieldName)) {
-      const memberIndex = evt.target.closest('.teamMember').dataset.memberIndex;
+      const memberIndex = target.closest('.teamMember').dataset.memberIndex;
       updatedTeamForm.members = [...formState.members];
       updatedTeamForm.members[memberIndex][fieldName] = fieldValue;
     } else {

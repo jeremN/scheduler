@@ -60,6 +60,7 @@ function AuthProvider(props) {
     (remainingTime = 60 * 60 * 1000) => {
       setTimeout(() => {
         logout();
+        history.push('/');
       }, remainingTime);
     },
     [logout]
@@ -100,13 +101,10 @@ function AuthProvider(props) {
     [history]
   );
 
-  const value = useMemo(() => ({ user, login, logout, register, autoLogout }), [
-    login,
-    logout,
-    register,
-    user,
-    autoLogout,
-  ]);
+  const value = useMemo(
+    () => ({ user, login, logout, register, autoLogout, setData }),
+    [login, logout, register, user, autoLogout, setData]
+  );
 
   if (isLoading || isIdle) {
     return <FullPageLoader />;

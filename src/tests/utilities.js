@@ -16,7 +16,6 @@ async function customRender(component, { user, route = '/', ...options } = {}) {
       ...options,
     }),
     user,
-    history,
   };
 
   await waitForElementToBeRemoved(() => [...screen.queryAllByText(/loading/i)]);

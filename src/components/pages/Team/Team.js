@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useReducer } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Checkbox from '../../atoms/Checkbox/Checkbox';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
@@ -72,6 +73,7 @@ const teamReducer = (currentState, action) => {
 
 const Team = () => {
   const client = useClient();
+  const query = new URLSearchParams(useLocation().search);
   const { isLoading, isSuccess, isError, error, run } = useAsync();
 
   const [teamState, setTeamState] = useReducer(teamReducer, initialTeamState);
@@ -106,15 +108,31 @@ const Team = () => {
   }, [client, run]);
 
   useEffect(() => {
-    const options = setTeamsOptions(teamState.teamList);
-    setTeamState({
-      type: actionTypes.setFilters,
-      payload: options,
-    });
-    setTeamState({
-      type: actionTypes.setActiveFilters,
-      payload: options.map((team) => team.wording),
-    });
+    let mounted = true;
+
+    if (mounted) {
+      const options = setTeamsOptions(teamState.teamList);
+
+      setTeamState({
+        type: actionTypes.setFilters,
+        payload: options,
+      });
+      setTeamState({
+        type: actionTypes.setActiveFilters,
+        payload: options.map((team) => {
+          if (query.get('filter') && team.value === query.get('filter')) {
+            return team.wording;
+          } else if (!query.get('filter')) {
+            return team.wording;
+          } else {
+            return null;
+          }
+        }),
+      });
+    }
+    return function cleanup() {
+      mounted = false;
+    };
   }, [teamState.teamList]);
 
   function setSidebarStateType(newType) {
@@ -266,7 +284,7 @@ const Team = () => {
   };
 
   return (
-    <Fragment>
+    <main>
       <TeamsNav
         teamsMembersLength={[teamState.teamList.length, getMembersLength()]}
         addNewTeamMemberFn={() => setSidebarStateType('member')}
@@ -291,7 +309,7 @@ const Team = () => {
       {teamState.sidebarState === 'show'
         ? toggleSidebar(teamState.sidebarType)
         : null}
-    </Fragment>
+    </main>
   );
 };
 

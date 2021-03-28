@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Card from '../../atoms/Card/Card';
@@ -100,7 +100,7 @@ const Teammate = () => {
   }
 
   return (
-    <Fragment>
+    <main>
       <TeammateNav
         team={teammate.user.teamName}
         name={`${teammate.user.firstname} ${teammate.user.lastname}`}
@@ -153,7 +153,7 @@ const Teammate = () => {
           />
         </aside>
       </div>
-    </Fragment>
+    </main>
   );
 };
 

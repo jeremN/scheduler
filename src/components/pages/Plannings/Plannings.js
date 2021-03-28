@@ -1,47 +1,39 @@
-import React, {
-  Fragment,
-  useReducer,
-  useState,
-  useMemo,
-  useEffect,
-} from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import moment from 'moment';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import DatePicker from 'react-datepicker';
+import DatePicker, { setDefaultLocale } from 'react-datepicker';
 
+import Loader from '../../atoms/Loader/Loader';
 import Card from '../../atoms/Card/Card';
 import Button from '../../atoms/Buttons/Buttons';
 import Input from '../../atoms/Input/Input';
+import SelectInput from '../../atoms/SelectInput/SelectInput';
 import FormGroup from '../../molecules/FormGroup/FormGroup';
+import ErrorMessage from '../../molecules/ErrorMessage/ErrorMessage';
+import PlanningsList from '../../organisms/PlanningsList/PlanningsList';
 
-import { useClient } from '../../../context/authContext';
+import { useAuth, useClient } from '../../../context/authContext';
 import { useAsync } from '../../../hooks/useAsync';
+import {
+  addDays,
+  getTimeOnly,
+  dateFormatting,
+} from '../../../utilities/utilities';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './Plannings.scss';
 
-const addDays = (date, days) => {
-  let result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-};
+setDefaultLocale('fr');
 
-const getTimeOnly = (date) => {
-  let time = new Date(date);
-  return moment(time).format('HH:mm:ss');
-};
-
-const dateFormatting = (date) => {
-  const currentDate = new Date(date);
-  return moment(currentDate).format('DD/MM/YYYY');
-};
-
-const Plannings = (props) => {
+const Plannings = () => {
   const currentDate = new Date();
   const currentDatePlusSevenDays = addDays(currentDate, 6);
   const client = useClient();
-  const { run, isError, isLoading } = useAsync();
+  const {
+    user: { teams },
+  } = useAuth();
+  const { run, isError, isLoading, error } = useAsync();
+  const history = useHistory();
 
   const initialFormState = {
     title: '',
@@ -53,15 +45,15 @@ const Plannings = (props) => {
   };
 
   const [planningsList, setplanningsList] = useState([]);
-  const [planningId, setPlanningId] = useState(null);
   const [state, setState] = useState(initialFormState);
 
-  const handleChange = ({ target }) => {
-    const { name, value } = target;
+  const handleChange = (event, fieldName = null, fieldValue = null) => {
+    let currentValue = event?.target.value ?? fieldValue;
+    let currentName = event?.target.name ?? fieldName;
 
     setState({
       ...state,
-      [name]: value,
+      [currentName]: currentValue,
     });
   };
 
@@ -85,7 +77,7 @@ const Plannings = (props) => {
       const datas = await result;
 
       if (datas.planningID) {
-        setPlanningId(datas.planningID);
+        history.push(`/plannings/edit/${datas.planningID}`);
       } else {
         throw new Error(
           'An error occured while trying to create your planning, please try again'
@@ -108,111 +100,57 @@ const Plannings = (props) => {
       });
     }
     fetchListOfPlannings();
-  }, []);
+  }, [client, run]);
 
-  const { title, shop, startDate, endDate, startHours, endHours } = state;
+  const { title, team, startDate, endDate, startHours, endHours } = state;
 
-  const plannings = useMemo(() => {
-    const handleDelete = (evt, planningID) => {
-      evt.preventDefault();
-      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/deletePlanning/${planningID}`;
-      run;
-      fetch(url, {
+  function deletePlanning(evt, planningId) {
+    evt.preventDefault();
+
+    run(
+      client(`plannings/deletePlanning/${planningId}`, {
         method: 'DELETE',
       })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((result) => {
-          // TODO display response message
-          const currentList = [...planningsList];
-          const updatedList = currentList.filter(
-            (element) => element._id !== planningID
-          );
-          setplanningsList(updatedList);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
+    ).then(async (result) => {
+      const datas = await result;
 
-    const handleDuplicate = (evt, planningID) => {
-      evt.preventDefault();
-      const url = `${process.env.REACT_APP_API_ENDPOINT}/plannings/duplicate`;
-      const headers = new Headers();
-      headers.append('Content-Type', 'application/json');
+      if (datas.delete) {
+        const currentList = [...planningsList];
+        const updatedList = currentList.filter(
+          (element) => element._id !== planningId
+        );
+        setplanningsList(updatedList);
+      }
+    });
+  }
 
-      const currentList = [...planningsList];
-      const duplicatedPlanning = currentList.find(
-        (element) => element._id === planningID
-      );
+  function duplicatePlanning(evt, planningID) {
+    evt.preventDefault();
 
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({ planningID: planningID }),
+    run(
+      client('plannings/duplicate', {
+        body: { planningID },
       })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((result) => {
-          const newPlanning = {
-            ...duplicatedPlanning,
-            _id: result.newID,
-          };
-          const updatedList = [...currentList, newPlanning];
-          setplanningsList(updatedList);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
+    ).then(async (result) => {
+      const datas = await result;
 
-    return (
-      <ul className="plannings__list">
-        <li className="plannings__item">
-          <span className="plannings__itemTitle">Titre</span>
-          <span className="plannings__itemShop">Equipe</span>
-          <span className="plannings__itemDates">
-            Du <br /> Au
-          </span>
-          <span className="plannings__itemHours">Heures</span>
-          <span className="plannings__itemStatus">Status</span>
-          <span className="plannings__itemActions"></span>
-        </li>
-        {planningsList.map((planning, index) => (
-          <li key={planning._id} className="plannings__item">
-            <span className="plannings__itemTitle">{planning.title}</span>
-            <span className="plannings__itemShop">{planning.shop}</span>
-            <span className="plannings__itemDates">
-              {planning.startDate} <br /> {planning.endDate}
-            </span>
-            <span className="plannings__itemHours">
-              {planning.startHours} - {planning.endHours}
-            </span>
-            <span className="plannings__itemStatus">{planning.status}</span>
-            <span className="plannings__itemActions">
-              <Link to={`/plannings/edit/${planning._id}`}>Editer</Link>
-              <Button clicked={(evt) => handleDelete(evt, planning._id)}>
-                Supprimer
-              </Button>
-              <Button clicked={(evt) => handleDuplicate(evt, planning._id)}>
-                Dupliquer
-              </Button>
-            </span>
-          </li>
-        ))}
-      </ul>
-    );
-  }, [planningsList]);
+      if (datas.newID) {
+        const duplicatedPlanning = [...planningsList].find(
+          (element) => element._id === planningID
+        );
+
+        const newPlanning = {
+          ...duplicatedPlanning,
+          _id: datas.newID,
+        };
+        const updatedList = [...planningsList, newPlanning];
+        setplanningsList(updatedList);
+      }
+    });
+  }
 
   return (
-    <Fragment>
-      {planningId ? <Redirect to={`/plannings/edit/${planningId}`} /> : null}
+    <main>
       <div className="plannings">
         <Card modifiers={['primary']} classes={['card__item--1']}>
           <h3>Créer un planning</h3>
@@ -235,17 +173,19 @@ const Plannings = (props) => {
               wording="Magasin"
               isRequired={true}
               modifiers={['column']}>
-              <select
-                id="planningShop"
-                className="form__field"
-                type="text"
-                name="shop"
-                value={shop}
-                onChange={handleChange}>
-                <option value="none">Choisir un magasin</option>
-                <option value="aubergenville">Aubergenville</option>
-                <option value="plaisir">Plaisir</option>
-              </select>
+              <SelectInput
+                id={`planningShop`}
+                name={'team'}
+                value={team}
+                optionsArray={[
+                  { wording: 'choisir une équipe', value: '' },
+                  ...teams.map(({ name, _id }) => ({
+                    wording: name,
+                    value: _id,
+                  })),
+                ]}
+                onChangeFn={handleChange}
+              />
             </FormGroup>
             <div className="form__inline customDates">
               <FormGroup
@@ -323,10 +263,16 @@ const Plannings = (props) => {
           <p className="subtitle">
             Seuls les {planningsList.length} derniers plannings sont affichés
           </p>
-          {plannings}
+          <PlanningsList
+            onDelete={deletePlanning}
+            onDuplicate={duplicatePlanning}
+            planningsList={planningsList}
+          />
         </Card>
+        {isLoading ? <Loader /> : null}
+        {isError ? <ErrorMessage error={error} /> : null}
       </div>
-    </Fragment>
+    </main>
   );
 };
 

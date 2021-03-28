@@ -2,21 +2,8 @@
 
 $itemBorderColor--default: hsl(240°, 100%, 99%);
 
-%F14Lh12B {
-  font-weight: bold;
-  font-size: 1.4rem;
-}
-
 %CdeepBlue {
   color: $deepBlue;
-}
-
-%ellipsis {
-  display: -webkit-box;
-  overflow: hidden;
-  word-break: break-all;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 1;
 }
 
 .plannings {
@@ -44,37 +31,6 @@ $itemBorderColor--default: hsl(240°, 100%, 99%);
 
   .subtitle {
     font-size: 1.2rem;
-  }
-
-  &__item {
-    @extend %F14Lh12B;
-    @extend %CdeepBlue;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    margin: 8px auto;
-    border-bottom: 2px solid $greyLight;
-
-    & > span:not(.plannings__itemActions) {
-      @extend %ellipsis;
-      width: calc((100% - 280px - 40px) / 5 );
-    }
-  }
-
-  &__itemShop {
-    text-transform: capitalize;
-  }
-
-  &__itemActions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 280px;
-
-    > * {
-      margin: 0 5px;
-    }
   }
 
   .form {

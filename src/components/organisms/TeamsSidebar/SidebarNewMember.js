@@ -64,8 +64,7 @@ export default function SidebarNewMember({
     });
   }
 
-  const handleSelectedTeamChange = (evt) => {
-    const { target } = evt;
+  const handleSelectedTeamChange = ({ target }) => {
     setFormState({
       ...formState,
       selectedTeam: target.value,

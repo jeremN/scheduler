@@ -6,7 +6,17 @@
   justify-content: space-between;
   padding: 13px 45px;
   height: 68px;
-  border-bottom: 2px solid $greyLighter;
+  border-bottom: 2px solid var(--geyser);
+  background-color: var(--athensGrey);
+
+  &__members {
+    display: flex;
+    width: 40%;
+
+    > li {
+      margin-right: 1rem;
+    }
+  }
 
   &__leftBlock,
   &__rightBlock {
