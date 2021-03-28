@@ -4,9 +4,13 @@ import Buttons from '../../atoms/Buttons/Buttons';
 import Icon from '../../atoms/Icon/Icon';
 import PlanningMemberNavMenu from '../../molecules/PlanningMemberNavMenu/PlanningMemberNavMenu';
 
+import { useEditPlanning } from '../../../context/editPlanningContext';
+
 import './EditPlanningNavigation.scss';
 
-const CreatePlanningsNav = ({ team }) => {
+const EditPlanningNav = () => {
+  const { savePlanning, planningState } = useEditPlanning();
+
   return (
     <div className="createPlanningsNav">
       <div className="createPlanningsNav__leftBlock">
@@ -43,7 +47,7 @@ const CreatePlanningsNav = ({ team }) => {
         </Buttons>
       </div>
       <ul className="createPlanningsNav__members">
-        {team?.members.map((member) => (
+        {planningState.team[0]?.members.map((member) => (
           <PlanningMemberNavMenu key={member._id} tag="li" {...member} />
         ))}
       </ul>
@@ -80,7 +84,7 @@ const CreatePlanningsNav = ({ team }) => {
           </Icon>
           imprimer
         </Buttons>
-        <Buttons>
+        <Buttons clicked={savePlanning}>
           <Icon>
             <svg
               width="17"
@@ -133,4 +137,4 @@ const CreatePlanningsNav = ({ team }) => {
   );
 };
 
-export default CreatePlanningsNav;
+export default EditPlanningNav;

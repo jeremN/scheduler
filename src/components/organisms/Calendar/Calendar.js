@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import { useCalendar } from '../../../hooks/useCalendar';
+import { useEditPlanning } from '../../../context/editPlanningContext';
 
 import './Calendar.scss';
 
@@ -52,22 +53,15 @@ function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick }) {
   );
 }
 
-function Calendar({
-  startHours,
-  endHours,
-  startDate,
-  endDate,
-  dimensions,
-  children,
-  onRightClick = () => {},
-}) {
+function Calendar({ dimensions, children, onRightClick = () => {} }) {
+  const { planningState } = useEditPlanning();
+
   const { getHoursLength, getWeekLength } = useCalendar(dimensions, {
-    endHours,
-    startHours,
-    startDate,
-    endDate,
-    hoursFormat,
     dayFormat,
+    startHours: planningState.startHours,
+    endHours: planningState.endHours,
+    startDate: planningState.startDate,
+    endDate: planningState.endDate,
   });
   const weekArray = getWeekLength();
   const { hours } = getHoursLength();

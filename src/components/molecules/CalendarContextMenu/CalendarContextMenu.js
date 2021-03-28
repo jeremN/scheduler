@@ -5,15 +5,10 @@ import Button from '../../atoms/Buttons/Buttons';
 import SelectInput from '../../atoms/SelectInput/SelectInput';
 import FormGroup from '../FormGroup/FormGroup';
 
-import {
-  addDays,
-  getTimeOnly,
-  dateFormatting,
-} from '../../../utilities/utilities';
+import { getTimeOnly, dateFormatting } from '../../../utilities/utilities';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './CalendarContextMenu.scss';
-import { getTime } from 'date-fns';
 
 setDefaultLocale('fr');
 

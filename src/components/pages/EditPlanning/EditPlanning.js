@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -36,10 +36,10 @@ function EditedPlanning() {
 
   return (
     <main ref={targetRef}>
-      <EditPlanningNav team={planningState.team[0]} />
       {isLoading ? <Loader /> : null}
       {isSuccess ? (
         <>
+          <EditPlanningNav />
           {contextMenu.show ? (
             <CalendarContextMenu
               members={planningState.team[0]?.members}
@@ -57,10 +57,6 @@ function EditedPlanning() {
             />
           ) : null}
           <Calendar
-            startHours={planningState.startHours}
-            endHours={planningState.endHours}
-            startDate={planningState.startDate}
-            endDate={planningState.endDate}
             dimensions={dimensions}
             onRightClick={toggleContextMenu}></Calendar>
         </>

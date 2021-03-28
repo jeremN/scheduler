@@ -87,19 +87,16 @@ const Plannings = () => {
   };
 
   useEffect(() => {
-    async function fetchListOfPlannings() {
-      run(client('plannings/planningsList')).then(async (result) => {
-        const { planningsList } = await result;
-        if (planningsList) {
-          setplanningsList(planningsList);
-        } else {
-          throw new Error(
-            'An error occured while trying to get plannings list, please try again'
-          );
-        }
-      });
-    }
-    fetchListOfPlannings();
+    run(client('plannings/planningsList')).then(async (result) => {
+      const { planningsList } = await result;
+      if (planningsList) {
+        setplanningsList(planningsList);
+      } else {
+        throw new Error(
+          'An error occured while trying to get plannings list, please try again'
+        );
+      }
+    });
   }, [client, run]);
 
   const { title, team, startDate, endDate, startHours, endHours } = state;

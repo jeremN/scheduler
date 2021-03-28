@@ -124,7 +124,7 @@ function PlanningProvider(props) {
         pauseEndHour,
         day: plannedDay,
       };
-      console.debug('schedule obj', scheduleObj);
+      console.debug('schedule obj', scheduleObj, id);
       const updatePlanningContent = [...planningState.content];
       const employeeIndex = updatePlanningContent.findIndex(
         ({ _id }) => _id === id
