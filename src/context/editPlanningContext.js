@@ -26,8 +26,8 @@ const defaultPlanningState = {
 
 const defaultContextMenuState = {
   show: false,
-  selectedDay: '',
-  selectedEmployee: '',
+  day: '',
+  employee: '',
   endHour: '',
   startHour: '',
 };
@@ -124,6 +124,8 @@ function PlanningProvider(props) {
         pauseEndHour,
         day: plannedDay,
       };
+      if (!id || !pauseStartHour || !pauseEndHour) return;
+
       console.debug('schedule obj', scheduleObj, id);
       const updatePlanningContent = [...planningState.content];
       const employeeIndex = updatePlanningContent.findIndex(

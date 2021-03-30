@@ -53,7 +53,7 @@ function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick }) {
   );
 }
 
-function Calendar({ dimensions, children, onRightClick = () => {} }) {
+function Calendar({ dimensions, onRightClick = () => {} }) {
   const { planningState } = useEditPlanning();
 
   const { getHoursLength, getWeekLength } = useCalendar(dimensions, {
@@ -64,7 +64,7 @@ function Calendar({ dimensions, children, onRightClick = () => {} }) {
     endDate: planningState.endDate,
   });
   const weekArray = getWeekLength();
-  const { hours } = getHoursLength();
+  const { hours, pxValue } = getHoursLength();
 
   return (
     <div className="calendar">
@@ -75,10 +75,53 @@ function Calendar({ dimensions, children, onRightClick = () => {} }) {
         <CalendarWeekBlocks
           weekArray={weekArray}
           hoursObj={hours}
-          onRightClick={onRightClick}
-        />
+          onRightClick={onRightClick}>
+          {planningState.content.map(({ _id, planned }) => {
+            const memberLength = planningState.team[0].members.length;
+
+            return planned.map(
+              ({ pauseStartHour, pauseEndHour, endHour, startHour }) => {
+                const workDuration = moment(endHour, hoursFormat).diff(
+                  moment(startHour, hoursFormat),
+                  'minutes'
+                );
+                const pauseDuration = moment(pauseEndHour, hoursFormat).diff(
+                  moment(pauseStartHour, hoursFormat),
+                  'minutes'
+                );
+                const pauseTopPos = moment(pauseStartHour, hoursFormat).diff(
+                  moment(startHour, hoursFormat)
+                );
+                const memberSchedulestyles = {
+                  width: `calc(((100% / 7) / ${memberLength}) - 10px)`,
+                  height: `${pxValue * workDuration}px`,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  backgroundColor: 'blue',
+                  borderRadius: '4px',
+                };
+                const pauseStyles = {
+                  width: '100%',
+                  height: `${pxValue * pauseDuration}px`,
+                  backgroundColor: 'grey',
+                  position: 'absolute',
+                  top: `${pxValue * pauseTopPos}px`,
+                  left: 0,
+                };
+                return (
+                  <div
+                    key={`draggable_${_id}`}
+                    className="calendar__draggable"
+                    style={memberSchedulestyles}>
+                    <div style={pauseStyles}></div>
+                  </div>
+                );
+              }
+            );
+          })}
+        </CalendarWeekBlocks>
       </div>
-      {children}
     </div>
   );
 }
