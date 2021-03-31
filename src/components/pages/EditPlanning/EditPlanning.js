@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
 import {
   PlanningProvider,
@@ -19,7 +18,6 @@ import './EditPlanning.scss';
 // url test: http://localhost:3000/plannings/edit/603815eb29ff8e29304c158c
 
 function EditedPlanning() {
-  let { id } = useParams();
   const {
     planningState,
     contextMenu,
@@ -31,8 +29,8 @@ function EditedPlanning() {
   const [dimensions, targetRef] = useGetBoundingRect();
 
   useEffect(() => {
-    run(loadPlanning(id));
-  }, [run, id, loadPlanning]);
+    run(loadPlanning());
+  }, [run, loadPlanning]);
 
   return (
     <main ref={targetRef}>

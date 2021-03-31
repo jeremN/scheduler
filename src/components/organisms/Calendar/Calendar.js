@@ -21,7 +21,7 @@ function CalendarHoursBlock({ hoursObj }) {
   );
 }
 
-function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick }) {
+function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick, children }) {
   return (
     <>
       {weekArray.map((day, weekIndex) => (
@@ -47,9 +47,42 @@ function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick }) {
                 style={{ height: `${pxHeight}px` }}></li>
             ))}
           </ul>
+          {children}
         </div>
       ))}
     </>
+  );
+}
+
+function CalendarScheduledBlocks({
+  memberLength,
+  pauseHeight,
+  memberHeight,
+  pauseTopPosition,
+  ...props
+}) {
+  const memberStyles = {
+    width: `calc(((100% / 7) / ${memberLength}) - 10px)`,
+    height: `${memberHeight}px`,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: 'blue',
+    borderRadius: '4px',
+  };
+  const pauseStyles = {
+    width: '100%',
+    height: `${pauseHeight}px`,
+    backgroundColor: 'grey',
+    position: 'absolute',
+    top: `${pauseTopPosition}px`,
+    left: 0,
+  };
+
+  return (
+    <div className="calendar__scheduledBlock" style={memberStyles}>
+      <div className="calendar__pauseBlock" style={pauseStyles}></div>
+    </div>
   );
 }
 
@@ -92,30 +125,14 @@ function Calendar({ dimensions, onRightClick = () => {} }) {
                 const pauseTopPos = moment(pauseStartHour, hoursFormat).diff(
                   moment(startHour, hoursFormat)
                 );
-                const memberSchedulestyles = {
-                  width: `calc(((100% / 7) / ${memberLength}) - 10px)`,
-                  height: `${pxValue * workDuration}px`,
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  backgroundColor: 'blue',
-                  borderRadius: '4px',
-                };
-                const pauseStyles = {
-                  width: '100%',
-                  height: `${pxValue * pauseDuration}px`,
-                  backgroundColor: 'grey',
-                  position: 'absolute',
-                  top: `${pxValue * pauseTopPos}px`,
-                  left: 0,
-                };
                 return (
-                  <div
+                  <CalendarScheduledBlocks
                     key={`draggable_${_id}`}
-                    className="calendar__draggable"
-                    style={memberSchedulestyles}>
-                    <div style={pauseStyles}></div>
-                  </div>
+                    memberLength={memberLength}
+                    pauseHeight={pxValue * pauseDuration}
+                    pauseTopPosition={pxValue * pauseTopPos}
+                    memberHeight={pxValue * workDuration}
+                  />
                 );
               }
             );

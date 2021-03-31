@@ -36,8 +36,14 @@ export default function CalendarContextMenu(props) {
       pauseStartHour,
     } = menuDatas;
 
+    const { employee: employeeFullname } = evt.target.elements;
+    console.debug('submit menu', evt, employeeFullname);
+
     props.onSubmit({
       id: employee,
+      fullname:
+        evt.target.elements.employee[evt.target.elements.employee.selectedIndex]
+          .innerHTML,
       plannedDay: dateFormatting(day),
       startHour: getTimeOnly(startHour),
       endHour: getTimeOnly(endHour),
