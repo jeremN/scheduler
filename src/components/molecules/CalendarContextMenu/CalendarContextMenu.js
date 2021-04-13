@@ -16,7 +16,6 @@ export default function CalendarContextMenu(props) {
   const [menuDatas, setMenuDatas] = useState({
     ...(props?.dayDatas ?? {
       employee: '',
-      poste: '',
       day: '',
       startHour: '',
       endHour: '',
@@ -36,9 +35,6 @@ export default function CalendarContextMenu(props) {
       pauseStartHour,
     } = menuDatas;
 
-    const { employee: employeeFullname } = evt.target.elements;
-    console.debug('submit menu', evt, employeeFullname);
-
     props.onSubmit({
       id: employee,
       fullname:
@@ -50,6 +46,8 @@ export default function CalendarContextMenu(props) {
       pauseEndHour: getTimeOnly(pauseEndHour),
       pauseStartHour: getTimeOnly(pauseStartHour),
     });
+
+    props.onCancel();
   }
 
   function handleChange(event, fieldName, fieldValue) {
@@ -61,6 +59,7 @@ export default function CalendarContextMenu(props) {
       [currentName]: currentValue,
     });
   }
+  console.debug('contextMenu', menuDatas);
 
   return (
     <form className="calendarContextMenu" onSubmit={handleSubmit}>

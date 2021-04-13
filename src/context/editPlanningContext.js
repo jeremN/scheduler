@@ -126,7 +126,7 @@ function PlanningProvider(props) {
         pauseStartHour,
         pauseEndHour,
         memberId: id,
-        memberFullname: fullname,
+        memberFullame: fullname,
         day: plannedDay,
       };
       if (!id || !pauseStartHour || !pauseEndHour) return;
@@ -169,12 +169,11 @@ function PlanningProvider(props) {
   );
 
   const toggleContextMenu = useCallback(
-    (evt, day = '', employee = '') => {
+    (evt, payload = {}) => {
       if (evt) evt.preventDefault();
       setContextMenu({
         show: !contextMenu.show,
-        day,
-        employee,
+        ...payload,
       });
     },
     [contextMenu.show]

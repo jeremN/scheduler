@@ -31,7 +31,7 @@ function EditedPlanning() {
   useEffect(() => {
     run(loadPlanning());
   }, [run, loadPlanning]);
-
+  console.debug('context menu bis', contextMenu);
   return (
     <main ref={targetRef}>
       {isLoading ? <Loader /> : null}
@@ -43,12 +43,33 @@ function EditedPlanning() {
               members={planningState.team[0]?.members}
               dayDatas={{
                 day: contextMenu.day,
-                endHour: contextMenu.day.setHours(
-                  ...planningState.endHours.split(':').map((value) => +value)
-                ),
-                startHour: contextMenu.day.setHours(
-                  ...planningState.startHours.split(':').map((value) => +value)
-                ),
+                endHour:
+                  contextMenu?.endHour ??
+                  contextMenu.day.setHours(
+                    ...planningState.endHours.split(':').map((value) => +value)
+                  ),
+                startHour:
+                  contextMenu?.startHour ??
+                  contextMenu.day.setHours(
+                    ...planningState.startHours
+                      .split(':')
+                      .map((value) => +value)
+                  ),
+                employee: contextMenu?.employee ?? '',
+                pauseStartHour: contextMenu?.pauseStartHour
+                  ? contextMenu.day.setHours(
+                      ...contextMenu.pauseStartHour
+                        .split(':')
+                        .map((value) => +value)
+                    )
+                  : '',
+                pauseEndHour: contextMenu?.pauseEndHour
+                  ? contextMenu.day.setHours(
+                      ...contextMenu.pauseEndHour
+                        .split(':')
+                        .map((value) => +value)
+                    )
+                  : '',
               }}
               onSubmit={addEmployeeSchedule}
               onCancel={toggleContextMenu}

@@ -29,11 +29,9 @@ function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick, children }) {
           key={moment(day, dayFormat).format(dayFormat)}
           className="calendar__dateBlock"
           onContextMenu={(evt) =>
-            onRightClick(
-              evt,
-              new Date(moment(day, 'DD/MM/yyyyTHH:mm:ss').utc()),
-              ''
-            )
+            onRightClick(evt, {
+              day: new Date(moment(day, 'DD/MM/yyyyTHH:mm:ss').utc()),
+            })
           }>
           <p className="calendar__date">
             {moment(day, dayFormat).format('dddd')}{' '}
@@ -56,31 +54,46 @@ function CalendarWeekBlocks({ weekArray, hoursObj, onRightClick, children }) {
 
 function CalendarScheduledBlocks({
   memberLength,
-  pauseHeight,
   memberHeight,
+  memberIndex,
+  memberTopPosition,
+  dayIndex,
+  pauseHeight,
   pauseTopPosition,
+  contextDatas = {},
+  onRightClick = () => {},
   ...props
 }) {
   const memberStyles = {
-    width: `calc(((100% / 7) / ${memberLength}) - 10px)`,
+    width: `calc(((100% / 7) / ${memberLength}) - 20px)`,
     height: `${memberHeight}px`,
+    margin: '0 10px',
     position: 'absolute',
-    top: 0,
-    left: 0,
+    left: `calc(((100% / 7) * ${dayIndex}) + ((((100% / 7) / ${memberLength}) - 20px) * ${memberIndex}) + (${memberIndex} * 20px))`,
+    top: `calc(50px + ${memberTopPosition}px)`,
     backgroundColor: 'blue',
-    borderRadius: '4px',
+    borderRadius: '8px',
   };
   const pauseStyles = {
     width: '100%',
     height: `${pauseHeight}px`,
-    backgroundColor: 'grey',
+    backgroundColor: 'black',
+    opacity: 0.5,
     position: 'absolute',
     top: `${pauseTopPosition}px`,
     left: 0,
   };
 
   return (
-    <div className="calendar__scheduledBlock" style={memberStyles}>
+    <div
+      className="calendar__scheduledBlock"
+      style={memberStyles}
+      onContextMenu={(evt) =>
+        onRightClick(evt, {
+          ...contextDatas,
+          day: new Date(moment(contextDatas.day, 'DD/MM/yyyyTHH:mm:ss').utc()),
+        })
+      }>
       <div className="calendar__pauseBlock" style={pauseStyles}></div>
     </div>
   );
@@ -108,36 +121,62 @@ function Calendar({ dimensions, onRightClick = () => {} }) {
         <CalendarWeekBlocks
           weekArray={weekArray}
           hoursObj={hours}
-          onRightClick={onRightClick}>
-          {planningState.content.map(({ _id, planned }) => {
-            const memberLength = planningState.team[0].members.length;
+          onRightClick={onRightClick}
+        />
+        {planningState.content.map(({ _id, memberId, planned }) => {
+          const memberLength = planningState.team[0].members.length;
+          const memberIndex = planningState.team[0].members.findIndex(
+            (member) => member._id === memberId
+          );
 
-            return planned.map(
-              ({ pauseStartHour, pauseEndHour, endHour, startHour }) => {
-                const workDuration = moment(endHour, hoursFormat).diff(
-                  moment(startHour, hoursFormat),
-                  'minutes'
-                );
-                const pauseDuration = moment(pauseEndHour, hoursFormat).diff(
-                  moment(pauseStartHour, hoursFormat),
-                  'minutes'
-                );
-                const pauseTopPos = moment(pauseStartHour, hoursFormat).diff(
-                  moment(startHour, hoursFormat)
-                );
-                return (
-                  <CalendarScheduledBlocks
-                    key={`draggable_${_id}`}
-                    memberLength={memberLength}
-                    pauseHeight={pxValue * pauseDuration}
-                    pauseTopPosition={pxValue * pauseTopPos}
-                    memberHeight={pxValue * workDuration}
-                  />
-                );
-              }
-            );
-          })}
-        </CalendarWeekBlocks>
+          return planned.map(
+            ({ pauseStartHour, pauseEndHour, endHour, startHour, day }) => {
+              const workDuration = moment(endHour, hoursFormat).diff(
+                moment(startHour, hoursFormat),
+                'minutes'
+              );
+
+              const workTopPos = moment(startHour, hoursFormat).diff(
+                moment(hours[0].loopKey, hoursFormat),
+                'minutes'
+              );
+
+              const pauseDuration = moment(pauseEndHour, hoursFormat).diff(
+                moment(pauseStartHour, hoursFormat),
+                'minutes'
+              );
+              const pauseTopPos = moment(pauseStartHour, hoursFormat).diff(
+                moment(startHour, hoursFormat),
+                'minutes'
+              );
+
+              const dayIndex = weekArray.findIndex(
+                (weekday) => weekday === day
+              );
+
+              console.debug(pauseTopPos, pxValue, dayIndex);
+              return (
+                <CalendarScheduledBlocks
+                  key={`draggable_${_id}_${day}`}
+                  contextDatas={{
+                    day,
+                    pauseStartHour,
+                    pauseEndHour,
+                    employee: memberId,
+                  }}
+                  onRightClick={onRightClick}
+                  memberLength={memberLength}
+                  memberIndex={memberIndex}
+                  memberTopPosition={workTopPos}
+                  dayIndex={dayIndex}
+                  pauseHeight={pxValue * pauseDuration}
+                  pauseTopPosition={pxValue * pauseTopPos}
+                  memberHeight={pxValue * workDuration}
+                />
+              );
+            }
+          );
+        })}
       </div>
     </div>
   );
