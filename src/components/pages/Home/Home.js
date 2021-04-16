@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import Calendar from 'react-calendar';
 import Card from '../../atoms/Card/Card';
 import CardHeading from '../../molecules/CardHeading/CardHeading';
@@ -8,9 +10,7 @@ import { useAsync } from '../../../hooks/useAsync';
 import './Home.scss';
 
 const Home = () => {
-  const {
-    user: { userId },
-  } = useAuth();
+  const { user, setData } = useAuth();
   const client = useClient();
   const { isLoading, isSuccess, isError, error, run } = useAsync();
   const [currentUser, setCurrentUser] = useState({
@@ -23,7 +23,7 @@ const Home = () => {
 
   useEffect(() => {
     run(
-      client(`user/${userId}`).then(async (result) => {
+      client(`user/${user.userId}`).then(async (result) => {
         const datas = await result;
 
         if (datas.user) {
@@ -31,18 +31,26 @@ const Home = () => {
         }
       })
     );
-  }, [userId, client, run]);
+  }, [user.userId, client, run]);
+
+  useEffect(() => {
+    const userTeams = currentUser.team.map(({ name, _id }) => ({
+      _id,
+      name,
+    }));
+    setData({ ...user, teams: userTeams });
+  }, [user, currentUser.team, setData]);
 
   const wordingDefault = {
     noPlanningDefault: "Vous n'avez pas créer de planning",
     noTeamDefault: "Vous n'avez pas créer d'équipe",
   };
 
-  function addListLink(list, keyToAdd, defaultLink) {
+  function addListLink(list, keyToAdd, defaultLink, routeTo) {
     if (list.length) {
       return list.map((item) => (
         <li key={item._id}>
-          <a href={`/team/${item._id}`}>{item[keyToAdd]}</a>
+          <Link to={`${routeTo}${item._id}`}>{item[keyToAdd]}</Link>
         </li>
       ));
     }
@@ -50,7 +58,7 @@ const Home = () => {
   }
 
   return (
-    <div className="dashboard">
+    <main className="dashboard">
       <h2>Dashboard</h2>
       <div className="panels panels--left">
         <div className="panel">
@@ -85,7 +93,12 @@ const Home = () => {
               ) : isError ? (
                 <div>Une erreur s'est produite {error} </div>
               ) : isSuccess ? (
-                addListLink(currentUser.plannings, 'title', 'noPlanningDefault')
+                addListLink(
+                  currentUser.plannings,
+                  'title',
+                  'noPlanningDefault',
+                  '/plannings/edit/'
+                )
               ) : null}
             </ul>
           </Card>
@@ -108,13 +121,18 @@ const Home = () => {
               ) : isError ? (
                 <div>Une erreur s'est produite {error} </div>
               ) : isSuccess ? (
-                addListLink(currentUser.team, 'name', 'noTeamDefault')
+                addListLink(
+                  currentUser.team,
+                  'name',
+                  'noTeamDefault',
+                  '/team?filter='
+                )
               ) : null}
             </ul>
           </Card>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
