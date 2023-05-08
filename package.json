@@ -16,7 +16,7 @@
     "react-dom": "^17.0.1",
     "react-error-boundary": "^3.1.0",
     "react-moveable": "^0.18.1",
-    "react-scripts": "^4.0.1"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,7 +47,7 @@
     "@storybook/addon-links": "^6.1.15",
     "@storybook/addons": "^6.1.15",
     "@storybook/preset-create-react-app": "^3.1.5",
-    "@storybook/react": "^6.1.21",
+    "@storybook/react": "^6.5.16",
     "@testing-library/react-hooks": "^5.0.3",
     "gsap": "^3.6.0",
     "history": "^5.0.0",
